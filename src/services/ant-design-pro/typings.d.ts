@@ -2,6 +2,7 @@
 /* eslint-disable */
 
 declare namespace API {
+
   type CurrentUser = {
     name?: string;
     avatar?: string;
@@ -22,9 +23,17 @@ declare namespace API {
     address?: string;
     phone?: string;
   };
-
+  type LoginResultData = {
+    expiresIn: string,
+    tokenHead: string,
+    token: string,
+    refreshToken: string
+  }
   type LoginResult = {
+    code?: number;
     status?: string;
+    data: LoginResultData;
+    message?: string;
     type?: string;
     currentAuthority?: string;
   };
@@ -70,9 +79,9 @@ declare namespace API {
 
   type ErrorResponse = {
     /** 业务约定的错误码 */
-    errorCode: string;
+    code: number;
     /** 业务上的错误信息 */
-    errorMessage?: string;
+    message?: string;
     /** 业务上的请求是否成功 */
     success?: boolean;
   };

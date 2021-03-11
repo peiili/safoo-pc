@@ -4,6 +4,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { Alert, message } from 'antd';
+import { setCacheValue } from '@/utils/local-data';
 import React, { useState } from 'react';
 import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
@@ -57,8 +58,13 @@ const Login: React.FC = () => {
     setSubmitting(true);
     try {
       // 登录
-      const msg = await login(values.password,values.username);
-      if (msg.status === 'ok') {
+      const msg:API.LoginResult = await login(values.password,values.username);
+
+      if (msg.code === 200) {
+        const {data} = msg
+        setCacheValue('expiresIn', data.expiresIn);
+        setCacheValue('token', data.tokenHead + data.token);
+        setCacheValue('refreshToken', data.refreshToken);
         message.success('登录成功！');
         await fetchUserInfo();
         goto();

@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import { request } from 'umi';
+import request from '@/services/request';
 
 /** 获取规则列表 GET /api/rule */
 export async function rule(
