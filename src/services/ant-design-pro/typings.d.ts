@@ -2,33 +2,37 @@
 /* eslint-disable */
 
 declare namespace API {
-
   type CurrentUser = {
-    name?: string;
-    avatar?: string;
-    userid?: string;
-    email?: string;
-    signature?: string;
-    title?: string;
-    group?: string;
-    tags?: { key?: string; label?: string }[];
-    notifyCount?: number;
-    unreadCount?: number;
-    country?: string;
-    access?: string;
-    geographic?: {
-      province?: { label?: string; key?: string };
-      city?: { label?: string; key?: string };
-    };
-    address?: string;
+    createTime?: string;
+    departmentCode?: string;
+    departmentId?: number;
+    departmentName?: string;
+    departmentType?: number;
+    id: number;
+    nickname?: string;
+    organizationCode?: string;
+    organizationId?: number;
+    organizationName?: string;
+    organizationType?: number;
     phone?: string;
+    roleType?: number;
+    roles: RuleListItem[];
+    status: number;
+    username: string;
+    wxUnionid?: string;
+  };
+  type ResultUser = {
+    code?: number;
+    status?: string;
+    data: CurrentUser;
+    message?: string;
   };
   type LoginResultData = {
-    expiresIn: string,
-    tokenHead: string,
-    token: string,
-    refreshToken: string
-  }
+    expiresIn: string;
+    tokenHead: string;
+    token: string;
+    refreshToken: string;
+  };
   type LoginResult = {
     code?: number;
     status?: string;
@@ -44,18 +48,8 @@ declare namespace API {
   };
 
   type RuleListItem = {
-    key?: number;
-    disabled?: boolean;
-    href?: string;
-    avatar?: string;
-    name?: string;
-    owner?: string;
-    desc?: string;
-    callNo?: number;
-    status?: number;
-    updatedAt?: string;
-    createdAt?: string;
-    progress?: number;
+    id: number;
+    name: string;
   };
 
   type RuleList = {

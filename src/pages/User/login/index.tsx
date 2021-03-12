@@ -1,8 +1,4 @@
-import {
-  LockOutlined,
-  MobileOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
+import { LockOutlined, MobileOutlined, UserOutlined } from '@ant-design/icons';
 import { Alert, message } from 'antd';
 import { setCacheValue } from '@/utils/local-data';
 import React, { useState } from 'react';
@@ -39,7 +35,7 @@ const goto = () => {
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
-  const [type, setType] = useState<string>('account');
+  const [type] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const intl = useIntl();
@@ -58,10 +54,10 @@ const Login: React.FC = () => {
     setSubmitting(true);
     try {
       // 登录
-      const msg:API.LoginResult = await login(values.password,values.username);
+      const msg: API.LoginResult = await login(values.password, values.username);
 
       if (msg.code === 200) {
-        const {data} = msg
+        const { data } = msg;
         setCacheValue('expiresIn', data.expiresIn);
         setCacheValue('token', data.tokenHead + data.token);
         setCacheValue('refreshToken', data.refreshToken);

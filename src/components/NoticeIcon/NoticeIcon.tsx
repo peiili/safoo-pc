@@ -1,4 +1,4 @@
-import { BellOutlined } from '@ant-design/icons';
+// import { BellOutlined } from '@ant-design/icons';
 import { Badge, Spin, Tabs } from 'antd';
 import useMergedState from 'rc-util/es/hooks/useMergedState';
 import React from 'react';
@@ -69,7 +69,7 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
             showViewMore={showViewMore}
             title={title}
           />
-        </TabPane>,
+        </TabPane>
       );
     });
     return (
@@ -83,7 +83,7 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
     );
   };
 
-  const { className, count, bell } = props;
+  const { className, count } = props;
 
   const [visible, setVisible] = useMergedState<boolean>(false, {
     value: props.popupVisible,
@@ -91,11 +91,11 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
   });
   const noticeButtonClass = classNames(className, styles.noticeButton);
   const notificationBox = getNotificationBox();
-  const NoticeBellIcon = bell || <BellOutlined className={styles.icon} />;
+  // const NoticeBellIcon = bell || <BellOutlined className={styles.icon} />;
   const trigger = (
     <span className={classNames(noticeButtonClass, { opened: visible })}>
       <Badge count={count} style={{ boxShadow: 'none' }} className={styles.badge}>
-        {NoticeBellIcon}
+        {/* {NoticeBellIcon} */}
       </Badge>
     </span>
   );

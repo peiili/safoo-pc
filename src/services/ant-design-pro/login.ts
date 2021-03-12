@@ -23,8 +23,8 @@ export async function getFakeCaptcha(
 
 /** 登录接口 POST /api/login/outLogin */
 export async function outLogin(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/api/login/outLogin', {
-    method: 'GET',
+  return request<Record<string, any>>(`${basePath}/logout`, {
+    method: 'POST',
     ...(options || {}),
   });
 }
@@ -35,12 +35,12 @@ export async function login(password: string, username: string) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-    }
+    },
   });
 }
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser() {
-  return request<API.CurrentUser>(`${basePath}/info`, {
-    method: 'GET'
+  return request<API.ResultUser>(`${basePath}/info`, {
+    method: 'GET',
   });
 }

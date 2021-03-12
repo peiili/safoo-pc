@@ -1,10 +1,12 @@
+import { history } from 'umi';
 /**
  * request 网络请求工具
  * 更详细的 api 文档: https://github.com/umijs/umi-request
  */
 import request from 'umi-request';
 import { notification } from 'antd';
-import { getCacheValue } from '@/utils/local-data'
+import { getCacheValue } from '@/utils/local-data';
+
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
@@ -25,30 +27,37 @@ const codeMessage = {
 
 // request拦截器, 改变url 或 options.
 
-let Authorization = getCacheValue('token');
 request.interceptors.request.use((url, options) => {
-  if (!Authorization) {
-    Authorization = getCacheValue('token');
-  }
+  const Authorization = getCacheValue('token');
   return {
-    options: { ...options, interceptors: true, headers: { ...options.headers, Authorization: Authorization ? Authorization : '' }, getResponse: true },
+    options: {
+      ...options,
+      interceptors: true,
+      headers: { ...options.headers, Authorization: Authorization || '' },
+      getResponse: true,
+    },
   };
 });
 
 // response拦截器, 处理response
-request.interceptors.response.use(async (response, options) => {
-  const res = await response.clone().json()
+request.interceptors.response.use(async (response) => {
+  const res = await response.clone().json();
   if (!res) {
     notification.error({
       description: '您的网络发生异常，无法连接服务器',
       message: '网络异常',
     });
-  } else {
-    if (res.code !== 200) {
-      notification.error({
-        description: `错误${res.code}`,
-        message: codeMessage[res.code],
-      });
+  } else if (res.code !== 200) {
+    switch (res.code) {
+      case 401:
+        history.replace('/user/login');
+        break;
+      default:
+        notification.error({
+          description: `错误${res.code}`,
+          message: codeMessage[res.code],
+        });
+        break;
     }
   }
   return res;

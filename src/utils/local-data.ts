@@ -1,25 +1,19 @@
-
 export const getCacheValue = (name: string): string | null => {
-  var _value = localStorage['safoo_' + name] || localStorage['v_' + name];
-  if (!_value) {
-    var match = document.cookie.match("(^|;) ?" + 'safoo_' + name + "=([^;]*)(;|$)");
-    _value = match ? decodeURI(match[2]) : match;
+  const value = localStorage[`safoo_${name}`] || localStorage[`v_${name}`];
+  if (value && value !== '') {
+    return decodeURIComponent(value);
   }
-  if (_value && _value !== "") {
-    return decodeURIComponent(_value);
-  } else {
-    return null;
-  }
-}
+  return null;
+};
 
 export const setCacheValue = (name: string, value: string): void => {
-  if (!value && value !== "") {
-    localStorage.removeItem('safoo_' + name);
+  if (!value && value !== '') {
+    localStorage.removeItem(`safoo_${name}`);
   } else {
-    localStorage.setItem('safoo_' + name, encodeURIComponent(value));
+    localStorage.setItem(`safoo_${name}`, encodeURIComponent(value));
   }
-}
+};
 
 export const setUserId = (data: string) => {
-  return setCacheValue('userId', data)
-}
+  return setCacheValue('userId', data);
+};

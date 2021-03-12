@@ -12,9 +12,10 @@ const Settings: LayoutSettings & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: 'Ant Design Pro',
+  title: 'safoo',
   pwa: false,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+  name: 'safoo',
+  logo: 'http://www.safetycabinet.cn/_nuxt/img/c53629d.png',
   iconfontUrl: '',
 };
 
