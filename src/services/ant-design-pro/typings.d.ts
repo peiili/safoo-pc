@@ -45,9 +45,27 @@ declare namespace API {
     address: string;
     code: string;
     createdTime: string;
-    id: number;
+    id: string;
     mgrUserid: number;
     name: string;
+    mgrUserName: string;
+    mgrUserPhone: string;
+    mgrUserid: number;
+    srvOrgId: string;
+    srvOrgName: string;
+    srvUserId: string;
+    saleUserId: string;
+    saleUserName: string;
+    saleUserId: string;
+    srvUserName: string;
+    srvUserPhone: string;
+    techUserId: string;
+    techUserName: string;
+  };
+  type OrganizationDetailsResult = {
+    code: number;
+    data: OrganizationDetails;
+    message: string;
   };
   type OrganizationResult = {
     code: number;

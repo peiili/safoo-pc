@@ -19,3 +19,23 @@ export async function getOrganizationList(
     }
   );
 }
+/**
+ * 查看所负责的机构详情
+ * @param {String} id
+ */
+export async function getOrganizationDetails(id: string) {
+  return request<API.OrganizationDetailsResult>(`${basePath}/detail/${id}`, {
+    method: 'GET',
+  });
+}
+/**
+ * 删除某个机构
+ * @param {String} name
+ * @param {String} pageNum
+ * @param {String} pageSize -required false
+ */
+export async function delOrganization(id: string) {
+  return request<API.OrganizationResult>(`${basePath}/detail/${id}`, {
+    method: 'POST',
+  });
+}
