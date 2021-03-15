@@ -41,10 +41,26 @@ declare namespace API {
     type?: string;
     currentAuthority?: string;
   };
-
+  type OrganizationDetails = {
+    address: string;
+    code: string;
+    createdTime: string;
+    id: number;
+    mgrUserid: number;
+    name: string;
+  };
+  type OrganizationResult = {
+    code: number;
+    data: PageParams & PageResult & { list: OrganizationDetails[] };
+    message: string;
+  };
   type PageParams = {
-    current?: number;
+    pageNum?: number;
     pageSize?: number;
+  };
+  type PageResult = {
+    total?: number;
+    totalPage?: number;
   };
 
   type RuleListItem = {
