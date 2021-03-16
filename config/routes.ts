@@ -47,16 +47,16 @@
     redirect: '/welcome',
   },
   {
-    path: '/accountCenter',
-    icon: 'UserOutlined',
-    name: 'account.center',
-    component: './Account/center',
-  },
-  {
     path: '/organizationList',
     icon: 'PartitionOutlined',
     name: 'organization.list',
     component: './Organization/List/index.tsx',
+  },
+  {
+    path: '/account/center',
+    icon: 'UserOutlined',
+    name: 'account.center',
+    component: './Account/center.tsx',
   },
   {
     component: './404',

@@ -3,12 +3,13 @@
 
 declare namespace API {
   type CurrentUser = {
+    avatar?: string;
     createTime?: string;
     departmentCode?: string;
     departmentId?: number;
     departmentName?: string;
     departmentType?: number;
-    id: number;
+    id: string;
     nickname?: string;
     organizationCode?: string;
     organizationId?: number;
@@ -16,8 +17,8 @@ declare namespace API {
     organizationType?: number;
     phone?: string;
     roleType?: number;
-    roles: RuleListItem[];
-    status: number;
+    roles?: RuleListItem[];
+    status?: number;
     username: string;
     wxUnionid?: string;
   };
