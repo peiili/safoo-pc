@@ -37,6 +37,12 @@
     ],
   },
   {
+    path: '/userlist',
+    name: 'userlist',
+    icon: 'crown',
+    component: './UserList/index.tsx',
+  },
+  {
     name: 'list.table-list',
     icon: 'table',
     path: '/list',
@@ -53,10 +59,10 @@
     component: './Organization/List/index.tsx',
   },
   {
-    path: '/accountCenter',
+    path: '/account/center',
     icon: 'UserOutlined',
     name: 'account.center',
-    component: './Account/center',
+    component: './Account/center.tsx',
   },
   {
     component: './404',

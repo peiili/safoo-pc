@@ -19,7 +19,7 @@ export const initialStateConfig = {
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: API.CurrentUser;
+  currentUser: API.CurrentUser;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
   const fetchUserInfo = async () => {
@@ -30,11 +30,15 @@ export async function getInitialState(): Promise<{
     } catch (error) {
       history.push('/user/login');
     }
-    return undefined;
+    return {
+      id: '',
+      organizationId: '',
+      username: '',
+    };
   };
   // 如果是登录页面，不执行
+  const currentUser = await fetchUserInfo();
   if (history.location.pathname !== '/user/login') {
-    const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
       currentUser,
@@ -43,6 +47,7 @@ export async function getInitialState(): Promise<{
   }
   return {
     fetchUserInfo,
+    currentUser,
     settings: {},
   };
 }
