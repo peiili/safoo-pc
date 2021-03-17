@@ -39,3 +39,45 @@ export async function delOrganization(id: string) {
     method: 'POST',
   });
 }
+
+/**
+ * 获取机构人员列表
+ * @param {Object} body
+ * @param {String} body.orgId -机构id
+ * @param {String} body.account  -手机账号
+ */
+
+type USERLIST = {
+  data: Record<string, any>[];
+} & API.Response;
+export async function getChargeList(body: { account?: string; orgId?: string }) {
+  return request<USERLIST>(
+    `${basePath}/members?orgId=${body.orgId}${body.account ? `&account=${body.account}` : ''}`,
+    {
+      method: 'GET',
+    }
+  );
+}
+
+/**
+ * 更新机构人员列表
+ * @param {Object} body
+ * @param {String} body.orgDeptId - 机构或部门id
+ * @param {String} body.userId  - 人员id
+ * @param {String} body.assignType  - 指定对象： 4.用户机构、部门负责人，6.普通人员 7。客服人员 8.销售人员 9安装维护人员
+ */
+
+export async function updateCharge(
+  orgDeptId: number,
+  userid: string,
+  assignType?: '4' | '6' | '7' | '8' | '9'
+) {
+  return request<API.Response>(`${basePath}/assignUser`, {
+    method: 'POST',
+    data: {
+      orgDeptId,
+      userid,
+      assignType,
+    },
+  });
+}

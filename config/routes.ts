@@ -37,6 +37,12 @@
     ],
   },
   {
+    path: '/userlist',
+    name: 'userlist',
+    icon: 'crown',
+    component: './UserList/index.tsx',
+  },
+  {
     name: 'list.table-list',
     icon: 'table',
     path: '/list',

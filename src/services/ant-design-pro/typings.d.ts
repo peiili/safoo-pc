@@ -12,7 +12,7 @@ declare namespace API {
     id: string;
     nickname?: string;
     organizationCode?: string;
-    organizationId?: number;
+    organizationId: string;
     organizationName?: string;
     organizationType?: number;
     phone?: string;
@@ -106,6 +106,14 @@ declare namespace API {
     type?: string;
   };
 
+  type Response = {
+    /** 业务约定的错误码 */
+    code: number;
+    /** 业务上的错误信息 */
+    message?: string;
+    /** 业务上的请求是否成功 */
+    success?: boolean;
+  };
   type ErrorResponse = {
     /** 业务约定的错误码 */
     code: number;

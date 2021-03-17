@@ -14,7 +14,6 @@ const Settings: LayoutSettings & {
   colorWeak: false,
   title: 'safoo',
   pwa: false,
-  name: 'safoo',
   logo: 'http://www.safetycabinet.cn/_nuxt/img/c53629d.png',
   iconfontUrl: '',
 };
