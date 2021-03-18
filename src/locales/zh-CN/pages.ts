@@ -61,5 +61,8 @@ export default {
   'pages.searchTable.totalServiceCalls': '服务调用次数总计',
   'pages.searchTable.tenThousand': '万',
   'pages.searchTable.batchDeletion': '批量删除',
-  'pages.searchTable.batchApproval': '批量审批',
+  'pages.service.production': '生产调试',
+  'pages.service.install': '安装调试',
+  'pages.service.repair': '设备维修',
+  'pages.service.maintain': '设备维保',
 };

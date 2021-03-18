@@ -65,6 +65,38 @@
     component: './Account/center.tsx',
   },
   {
+    path: '/service',
+    icon: 'CommentOutlined',
+    name: 'service',
+    component: './Service/index.tsx',
+    // routes: [
+    //   {
+    //     path: '/service/production',
+    //     icon: '',
+    //     name: 'production',
+    //     component: './Service/Production/index.tsx',
+    //   },
+    //   {
+    //     path: '/service/install',
+    //     icon: '',
+    //     name: 'install',
+    //     component: './Service/Install/index.tsx',
+    //   },
+    //   {
+    //     path: '/service/repair',
+    //     icon: '',
+    //     name: 'repair',
+    //     component: './Service/Repair/index.tsx',
+    //   },
+    //   {
+    //     path: '/service/maintain',
+    //     icon: '',
+    //     name: 'maintain',
+    //     component: './Service/Maintain/index.tsx',
+    //   },
+    // ]
+  },
+  {
     component: './404',
   },
 ];
