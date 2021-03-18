@@ -2,7 +2,37 @@ import React, { useState } from 'react';
 import type { ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { getSetupList } from '@/services/api-support';
+import { Descriptions } from 'antd';
+import { ModalForm } from '@ant-design/pro-form';
 
+function DetailsModal(props: { details: Record<string, any> }) {
+  const column: Record<string, any>[] = [
+    { label: '设备名称', key: 'deviceName' },
+    { label: '设备地址', key: 'orgAddress' },
+    { label: '安装时间', key: 'setupTime' },
+    { label: '机构地址', key: 'orgAddress' },
+    { label: '机构码', key: 'orgMgrId' },
+    { label: '机构名称', key: 'orgName' },
+    { label: '机构管理员', key: 'orgMgrNickName' },
+    { label: '联系方式', key: 'orgMgrPhone' },
+    { label: '技术支持', key: 'techNickName' },
+    { label: '技术支持电话', key: 'techUserPhone' },
+  ];
+  const ele = column.map((e) => {
+    return (
+      <Descriptions.Item key={e.key} label={e.label}>
+        {props.details[e.key]}
+      </Descriptions.Item>
+    );
+  });
+  return (
+    <>
+      <Descriptions bordered column={2} title="安装信息">
+        {ele}
+      </Descriptions>
+    </>
+  );
+}
 const Install: React.FC = () => {
   const chargeList = async () => {
     let data: any = {};
@@ -20,26 +50,51 @@ const Install: React.FC = () => {
     });
     return data;
   };
-  const [tmpParams] = useState<any>();
+  const [showDetails, setupShowDetails] = useState<boolean>(false);
+  const [currentRow, setDetails] = useState<any>({});
+  const setCurrentRow = (data: any): void => {
+    setupShowDetails(true);
+    setDetails(data);
+  };
   const columns: ProColumns<API.OrganizationDetails>[] = [
     {
-      dataIndex: 'nickName',
-      title: '姓名',
+      dataIndex: 'deviceId',
+      title: 'id',
     },
     {
-      dataIndex: 'account',
-      title: '账号',
+      dataIndex: 'deviceName',
+      title: '设备名称',
     },
     {
-      dataIndex: 'departmentName',
-      title: '所属部门',
+      dataIndex: 'setupTime',
+      title: '安装时间',
+    },
+    {
+      dataIndex: 'orgName',
+      title: '所属机构',
+    },
+    {
+      dataIndex: 'orgMgrNickName',
+      title: '负责人',
+    },
+    {
+      dataIndex: 'orgMgrPhone',
+      title: '联系方式',
     },
     {
       title: '操作',
       dataIndex: '',
       valueType: 'option',
-      render: () => {
+      render: (_, record) => {
         return [
+          <a
+            key="edit"
+            onClick={() => {
+              setCurrentRow(record);
+            }}
+          >
+            详情
+          </a>,
           <a
             key="edit"
             onClick={() => {
@@ -47,24 +102,37 @@ const Install: React.FC = () => {
               // setCurrentRow(record);
             }}
           >
-            更换部门
+            控制设备
           </a>,
         ];
       },
     },
   ];
   return (
-    <ProTable<API.OrganizationDetails>
-      columns={columns}
-      request={chargeList}
-      rowKey="id"
-      params={tmpParams}
-      pagination={{
-        showQuickJumper: false,
-      }}
-      toolBarRender={false}
-      search={false}
-    />
+    <>
+      <ProTable<API.OrganizationDetails>
+        columns={columns}
+        request={chargeList}
+        rowKey="deviceId"
+        pagination={{
+          showQuickJumper: false,
+        }}
+        toolBarRender={false}
+        search={false}
+      />
+      <ModalForm<{
+        name: string;
+        company: string;
+      }>
+        title="机构详情"
+        visible={showDetails}
+        modalProps={{
+          onCancel: () => setupShowDetails(false),
+        }}
+      >
+        <DetailsModal details={currentRow} />
+      </ModalForm>
+    </>
   );
 };
 export default Install;

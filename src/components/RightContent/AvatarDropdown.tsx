@@ -6,6 +6,7 @@ import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import { outLogin } from '@/services/ant-design-pro/login';
+import { setCacheValue } from '@/utils/local-data';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -20,8 +21,12 @@ const loginOut = async () => {
   const { redirect } = query;
   // Note: There may be security issues, please note
   if (window.location.pathname !== '/user/login' && !redirect) {
+    setCacheValue('expiresIn', false);
+    setCacheValue('token', false);
+    setCacheValue('refreshToken', false);
     history.replace({
       pathname: '/user/login',
+
       search: stringify({
         redirect: pathname,
       }),
@@ -42,7 +47,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     }) => {
       const { key } = event;
       if (key === 'logout' && initialState) {
-        setInitialState({ ...initialState, currentUser: undefined });
+        setInitialState({ ...initialState, currentUser });
         loginOut();
         return;
       }
