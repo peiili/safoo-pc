@@ -30,3 +30,10 @@ export async function getDepartmentList(pageNum: number, pageSize: number = 20, 
     }
   );
 }
+/**
+ * 查看机构详情
+ * @param {String} id -required
+ */
+export async function getDepartmentDetail(id: string) {
+  return request(`${basePath}/detail/${id}`, { method: 'GET' });
+}

@@ -1,21 +1,20 @@
-// import { Popconfirm, Space, Menu, Dropdown } from 'antd';
 import React, { useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import type { ProColumns } from '@ant-design/pro-table';
 import { Card } from 'antd';
+import type { ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { message, Descriptions } from 'antd';
-import {
-  ModalForm,
-  //   ProFormText,
-  //   ProFormDateRangePicker,
-  //   ProFormSelect,
-} from '@ant-design/pro-form';
-import { getOrganizationList, getOrganizationDetails } from '@/services/api-organization';
+import { ModalForm } from '@ant-design/pro-form';
+import { getDepartmentList, getDepartmentDetail } from '@/services/api-department';
 
-const organizationList = async (params: any) => {
+type tableParamsType = {
+  keyword: string;
+  current: number;
+  pageSize: number;
+};
+const departmentList = async (params: tableParamsType | any) => {
   let data: any = {};
-  await getOrganizationList(params.keyword, params.current, params.pageSize).then((res) => {
+  await getDepartmentList(params.current, params.pageSize, params.keyword).then((res) => {
     data = {
       success: true,
       data: res.data.list,
@@ -23,27 +22,35 @@ const organizationList = async (params: any) => {
   });
   return data;
 };
-
-const OrganizationList: React.FC = () => {
+const tableParams: tableParamsType = {
+  keyword: '',
+  current: 1,
+  pageSize: 20,
+};
+const DepartmentList: React.FC = () => {
   const [updateVisible, setHandleUpdate] = useState<boolean>(false);
   const [currentRow, setCurrentRowData] = useState<API.OrganizationDetails>({});
   const setCurrentRow = async (id: string): Promise<void> => {
-    await getOrganizationDetails(id).then((res) => {
+    await getDepartmentDetail(id).then((res) => {
       setCurrentRowData(res.data);
     });
   };
   const columns: ProColumns<API.OrganizationDetails>[] = [
     {
       dataIndex: 'code',
-      title: '机构码',
+      title: '部门代码',
     },
     {
       dataIndex: 'name',
-      title: '机构名称',
+      title: '部门名称',
     },
     {
-      dataIndex: 'address',
-      title: '地址',
+      dataIndex: 'createdTime',
+      title: '创建时间',
+    },
+    {
+      dataIndex: 'description',
+      title: '描述',
     },
     {
       title: '操作',
@@ -69,8 +76,9 @@ const OrganizationList: React.FC = () => {
       <Card>
         <ProTable<API.OrganizationDetails>
           columns={columns}
-          request={organizationList}
-          rowKey="code"
+          request={departmentList}
+          rowKey="id"
+          params={tableParams}
           pagination={{
             showQuickJumper: false,
           }}
@@ -82,7 +90,7 @@ const OrganizationList: React.FC = () => {
           name: string;
           company: string;
         }>
-          title="机构详情"
+          title="部门详情"
           visible={updateVisible}
           modalProps={{
             onCancel: () => setHandleUpdate(false),
@@ -107,4 +115,4 @@ const OrganizationList: React.FC = () => {
   );
 };
 
-export default OrganizationList;
+export default DepartmentList;
