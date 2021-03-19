@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import type { ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { getSetupList } from '@/services/api-support';
-import { Descriptions } from 'antd';
+import { Button, Descriptions } from 'antd';
 import { ModalForm } from '@ant-design/pro-form';
 
 function DetailsModal(props: { details: Record<string, any> }) {
@@ -27,7 +27,7 @@ function DetailsModal(props: { details: Record<string, any> }) {
   });
   return (
     <>
-      <Descriptions bordered column={2} title="安装信息">
+      <Descriptions bordered column={2}>
         {ele}
       </Descriptions>
     </>
@@ -124,10 +124,20 @@ const Install: React.FC = () => {
         name: string;
         company: string;
       }>
-        title="机构详情"
+        title="安装详情"
         visible={showDetails}
-        modalProps={{
-          onCancel: () => setupShowDetails(false),
+        submitter={{
+          render: () => {
+            return [
+              <Button
+                onClick={() => {
+                  setupShowDetails(false);
+                }}
+              >
+                关闭
+              </Button>,
+            ];
+          },
         }}
       >
         <DetailsModal details={currentRow} />
