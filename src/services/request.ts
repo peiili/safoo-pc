@@ -55,7 +55,7 @@ request.interceptors.response.use(async (response) => {
       default:
         notification.error({
           description: `错误${res.code}`,
-          message: codeMessage[res.code],
+          message: res.message || codeMessage[res.code],
         });
         break;
     }
