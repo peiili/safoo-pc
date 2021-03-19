@@ -5,12 +5,7 @@ import type { ProColumns } from '@ant-design/pro-table';
 import { Card } from 'antd';
 import ProTable from '@ant-design/pro-table';
 import { message, Descriptions } from 'antd';
-import {
-  ModalForm,
-  //   ProFormText,
-  //   ProFormDateRangePicker,
-  //   ProFormSelect,
-} from '@ant-design/pro-form';
+import { ModalForm } from '@ant-design/pro-form';
 import { getOrganizationList, getOrganizationDetails } from '@/services/api-organization';
 
 const organizationList = async (params: any) => {

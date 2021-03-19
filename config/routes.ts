@@ -65,6 +65,12 @@
     component: './Department/List/index.tsx',
   },
   {
+    path: '/departmentAudit',
+    icon: 'SnippetsOutlined',
+    name: 'department.audit',
+    component: './Department/Audit/index.tsx',
+  },
+  {
     path: '/account/center',
     icon: 'UserOutlined',
     name: 'account.center',
