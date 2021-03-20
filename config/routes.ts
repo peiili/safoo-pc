@@ -49,6 +49,12 @@
     component: './TableList',
   },
   {
+    path: '/devices/list',
+    icon: 'table',
+    name: 'device.list',
+    component: './Device/List/index.tsx',
+  },
+  {
     path: '/',
     redirect: '/welcome',
   },

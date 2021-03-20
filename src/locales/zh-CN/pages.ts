@@ -47,6 +47,7 @@ export default {
   'pages.searchTable.titleStatus': '状态',
   'pages.searchTable.nameStatus.default': '关闭',
   'pages.searchTable.nameStatus.running': '运行中',
+  'pages.searchTable.nameStatus.offline': '离线',
   'pages.searchTable.nameStatus.online': '已上线',
   'pages.searchTable.nameStatus.abnormal': '异常',
   'pages.searchTable.titleUpdatedAt': '上次调度时间',

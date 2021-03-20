@@ -58,4 +58,5 @@ export default {
   'menu.organization.list': '机构列表',
   'menu.department.list': '部门列表',
   'menu.department.audit': '审核',
+  'menu.device.list': '设备列表',
 };
