@@ -1,12 +1,11 @@
 import { LockOutlined, MobileOutlined, UserOutlined } from '@ant-design/icons';
-import { Alert, message } from 'antd';
+import { Alert, Button, message } from 'antd';
 import { setCacheValue } from '@/utils/local-data';
 import React, { useState } from 'react';
-import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
+import ProForm, { ProFormCaptcha, ProFormText, ModalForm } from '@ant-design/pro-form';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import Footer from '@/components/Footer';
 import { login, getFakeCaptcha } from '@/services/ant-design-pro/login';
-
 import styles from './index.less';
 
 const LoginMessage: React.FC<{
@@ -34,6 +33,7 @@ const goto = () => {
 
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
+  const [showReggisterModel, setRegister] = useState<boolean>(false);
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -49,7 +49,9 @@ const Login: React.FC = () => {
       });
     }
   };
-
+  const registerAccount = () => {
+    setRegister(true);
+  };
   const handleSubmit = async (values: API.LoginParams) => {
     setSubmitting(true);
     try {
@@ -274,9 +276,17 @@ const Login: React.FC = () => {
                 marginBottom: 24,
               }}
             >
-              <ProFormCheckbox noStyle name="autoLogin">
+              <a
+                style={{
+                  float: 'left',
+                }}
+                onClick={registerAccount}
+              >
+                <FormattedMessage id="pages.login.registerAccount" defaultMessage="注册账户" />
+              </a>
+              {/* <ProFormCheckbox noStyle name="autoLogin">
                 <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
-              </ProFormCheckbox>
+              </ProFormCheckbox> */}
               <a
                 style={{
                   float: 'right',
@@ -286,6 +296,25 @@ const Login: React.FC = () => {
               </a>
             </div>
           </ProForm>
+          <ModalForm<{}>
+            title="注册账户"
+            visible={showReggisterModel}
+            submitter={{
+              render: () => {
+                return [
+                  <Button
+                    onClick={() => {
+                      setRegister(false);
+                    }}
+                  >
+                    关闭
+                  </Button>,
+                ];
+              },
+            }}
+          >
+            {/* <DetailsModal details={currentRow} /> */}
+          </ModalForm>
         </div>
       </div>
       <Footer />
