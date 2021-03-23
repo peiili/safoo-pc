@@ -1,10 +1,11 @@
 import { LockOutlined, MobileOutlined, UserOutlined } from '@ant-design/icons';
-import { Alert, Button, message } from 'antd';
+import { Alert, message } from 'antd';
 import { setCacheValue } from '@/utils/local-data';
 import React, { useState } from 'react';
-import ProForm, { ProFormCaptcha, ProFormText, ModalForm } from '@ant-design/pro-form';
+import ProForm, { ProFormCaptcha, ProFormText } from '@ant-design/pro-form';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import Footer from '@/components/Footer';
+import Registry from './../registry/index';
 import { login, getFakeCaptcha } from '@/services/ant-design-pro/login';
 import styles from './index.less';
 
@@ -33,7 +34,7 @@ const goto = () => {
 
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
-  const [showReggisterModel, setRegister] = useState<boolean>(false);
+  const [showRegisterModel, setRegister] = useState<boolean>(false);
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -87,7 +88,6 @@ const Login: React.FC = () => {
               <img alt="logo" className={styles.logo} src="/logo.png" />
             </Link>
           </div>
-          {/* <div className={styles.desc}>Ant Design 是西湖区最具影响力的 Web 设计规范</div> */}
         </div>
 
         <div className={styles.main}>
@@ -296,25 +296,7 @@ const Login: React.FC = () => {
               </a>
             </div>
           </ProForm>
-          <ModalForm<{}>
-            title="注册账户"
-            visible={showReggisterModel}
-            submitter={{
-              render: () => {
-                return [
-                  <Button
-                    onClick={() => {
-                      setRegister(false);
-                    }}
-                  >
-                    关闭
-                  </Button>,
-                ];
-              },
-            }}
-          >
-            {/* <DetailsModal details={currentRow} /> */}
-          </ModalForm>
+          <Registry showRegisterModel={showRegisterModel} setRegister={setRegister} />
         </div>
       </div>
       <Footer />
