@@ -118,7 +118,7 @@ const DepartmentList: React.FC = () => {
       dataIndex: 'mgrUserid',
       title: '负责人',
       render: (_, record) => {
-        return [<p>{listItems.find((e) => e.id === record.mgrUserid)?.nickName}</p>];
+        return [<p key="mgr">{listItems.find((e) => e.id === record.mgrUserid)?.nickName}</p>];
       },
     },
     {
@@ -215,7 +215,6 @@ const DepartmentList: React.FC = () => {
               <ChargeSelect
                 currentCharge={currentRow.mgrUserid ? String(currentRow.mgrUserid) : ''}
                 handleOk={async (e: string) => {
-                  console.log(e);
                   const success = await subminCharge(e);
                   if (success) {
                     if (actionRef.current) {
