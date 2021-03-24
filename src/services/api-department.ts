@@ -57,3 +57,13 @@ export function createDepartment(body: DepType.newDepartment) {
 export function delDepartment(id: string) {
   return request(`${basePath}/delete?id=${id}`, { method: 'POST' });
 }
+/**
+ * 指派人员到部门
+ * @param {Object} body
+ * @param {String} body.userid      负责人id
+ * @param {String} body.orgDeptId   机构或部门id
+ * @param {String} body.assignType 	指定类型： 4.用户机构、部门负责人，7。客服人员 8.销售人员 9安装维护人员
+ */
+export function updateDepartmentCharge(body: DepType.updateCharge) {
+  return request(`${basePath}/assignMgr`, { method: 'POST', data: body });
+}

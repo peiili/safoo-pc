@@ -46,6 +46,7 @@ declare namespace API {
     address: string;
     code: string;
     createdTime: string;
+    description: string;
     id: string;
     mgrUserid: number;
     name: string;
