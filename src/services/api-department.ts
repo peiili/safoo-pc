@@ -50,3 +50,10 @@ export function getDepartmentDetail(id: string) {
 export function createDepartment(body: DepType.newDepartment) {
   return request(`${basePath}/create`, { method: 'POST', data: body });
 }
+/**
+ * 删除部门
+ * @param {String} id -required
+ */
+export function delDepartment(id: string) {
+  return request(`${basePath}/delete?id=${id}`, { method: 'POST' });
+}

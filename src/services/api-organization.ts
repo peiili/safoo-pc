@@ -50,7 +50,7 @@ export async function delOrganization(id: string) {
 type USERLIST = {
   data: Record<string, any>[];
 } & API.Response;
-export async function getChargeList(body: { account?: string; orgId?: string }) {
+export function getChargeList(body: { account?: string; orgId?: string }) {
   return request<USERLIST>(
     `${basePath}/members?orgId=${body.orgId}${body.account ? `&account=${body.account}` : ''}`,
     {

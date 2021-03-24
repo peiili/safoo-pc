@@ -5,10 +5,11 @@ import { Card } from 'antd';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 import ProTable from '@ant-design/pro-table';
-import { Button, message, Descriptions } from 'antd';
+import { Button, message, Descriptions, Popconfirm } from 'antd';
 import { useIntl, FormattedMessage } from 'umi';
 import {
   createDepartment,
+  delDepartment,
   getDepartmentList,
   getDepartmentDetail,
 } from '@/services/api-department';
@@ -61,6 +62,10 @@ const DepartmentList: React.FC = () => {
       setCurrentRowData(res.data);
     });
   };
+  const delDep = (id: string) => {
+    return delDepartment(id);
+  };
+  const cancel = (): void => {};
   const columns: ProColumns<API.OrganizationDetails>[] = [
     {
       dataIndex: 'code',
@@ -93,6 +98,25 @@ const DepartmentList: React.FC = () => {
           >
             详情
           </a>,
+          <Popconfirm
+            title="是否删除当前部门"
+            onConfirm={async () => {
+              const success = await delDep(record.id);
+              if (success) {
+                if (actionRef.current) {
+                  actionRef.current.reload();
+                }
+              }
+            }}
+            onCancel={cancel}
+            okText="是"
+            cancelText="否"
+            key="del"
+          >
+            <a href="#" style={{ color: 'red' }}>
+              删除
+            </a>
+          </Popconfirm>,
         ];
       },
     },
@@ -164,7 +188,6 @@ const DepartmentList: React.FC = () => {
           handleModalVisible(false);
           const success = await handleAdd(value);
           if (success) {
-            console.log(success);
             if (actionRef.current) {
               actionRef.current.reload();
             }
