@@ -23,3 +23,9 @@ export function userRegister({
     { method: 'POST' }
   );
 }
+export function updatePassword(body: LOGIN.rePassword) {
+  return request(
+    `${basePath}/updatePassword?authCode=${body.authCode}&password=${body.password}&telephone=${body.telephone}`,
+    { method: 'POST' }
+  );
+}

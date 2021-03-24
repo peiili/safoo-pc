@@ -7,4 +7,9 @@ declare namespace LOGIN {
     departmentCode: string | null;
     organizationCode: string | null;
   };
+  type rePassword = {
+    authCode: string;
+    password: string;
+    telephone: string;
+  };
 }

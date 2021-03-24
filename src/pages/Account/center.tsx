@@ -1,5 +1,6 @@
 import React, { useState } from 'React';
 import { Layout, Menu } from 'antd';
+import { useModel } from 'umi';
 import Base from './components/base';
 import Bind from './components/bind';
 import Security from './components/security';
@@ -8,6 +9,9 @@ import style from './index.less';
 const { Content, Sider } = Layout;
 type pageType = 'base' | 'bind' | 'security';
 const UserCenter: React.FC = () => {
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState || {};
+
   const [pageType, setPageType] = useState<pageType>();
   const currentContent = () => {
     switch (pageType) {
@@ -37,7 +41,7 @@ const UserCenter: React.FC = () => {
           style={{ height: '100%' }}
         >
           <Menu.Item key="base">基本信息</Menu.Item>
-          <Menu.Item key="bind">绑定信息</Menu.Item>
+          {currentUser?.wxUnionid ? <Menu.Item key="bind">绑定信息</Menu.Item> : ''}
           <Menu.Item key="security">安全信息</Menu.Item>
         </Menu>
       </Sider>

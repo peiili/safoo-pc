@@ -1,23 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ProFormText, ModalForm, ProFormCaptcha } from '@ant-design/pro-form';
-import { message } from 'antd';
+import { Form, message } from 'antd';
 import { getAuthCode, userRegister } from '@/services/api-user';
-// import { MobileOutlined, MailOutlined } from '@ant-design/icons';
-// import { Link } from 'umi';
-// import styles from './index.less';
 
 const Registry: React.FC<{ showRegisterModel: boolean; setRegister: Function }> = (props) => {
-  const [authCode, setAuthCode] = useState<string>();
+  const [form] = Form.useForm();
   const getCode = (phone: string) => {
     return getAuthCode(phone).then((res) => {
-      setAuthCode(res.data);
+      form.setFieldsValue({
+        authCode: res.data,
+      });
     });
   };
 
   const submitRegistry = (object: LOGIN.registryForm) => {
-    return userRegister(object).then((res) => {
-      console.log(res);
-    });
+    return userRegister(object);
   };
 
   return (
@@ -29,6 +26,7 @@ const Registry: React.FC<{ showRegisterModel: boolean; setRegister: Function }> 
           modalProps={{
             onCancel: () => props.setRegister(false),
           }}
+          form={form}
           onFinish={async (values) => {
             await submitRegistry(values);
             message.success('提交成功');
@@ -73,7 +71,6 @@ const Registry: React.FC<{ showRegisterModel: boolean; setRegister: Function }> 
             }}
             phoneName="telephone"
             name="authCode"
-            value={authCode}
             rules={[
               {
                 required: true,
@@ -118,11 +115,20 @@ const Registry: React.FC<{ showRegisterModel: boolean; setRegister: Function }> 
             }}
             name="rePassword"
             placeholder="确认密码"
+            dependencies={['password']}
             rules={[
               {
                 required: true,
                 message: '请再一次输入密码！',
               },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('两次输入的密码不一致'));
+                },
+              }),
             ]}
           />
         </ModalForm>
