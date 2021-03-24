@@ -1,9 +1,12 @@
-import { getBindDeviceList } from '@/services/api-device';
+import React, { useState } from 'react';
+import { getBindDeviceList, getDeviceInfo } from '@/services/api-device';
 import { Card } from 'antd';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns } from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
 import { FormattedMessage } from 'umi';
+import { ModalForm } from '@ant-design/pro-form';
+import Details from './../Details/index';
 
 // // 获取绑定列表
 const deviceList = async (params: any) => {
@@ -18,7 +21,15 @@ const deviceList = async (params: any) => {
   return data;
 };
 const Devices: React.FC = () => {
-  const columns: ProColumns<API.OrganizationDetails>[] = [
+  const [updateVisible, setHandleUpdate] = useState<boolean>(false);
+  // const [currentRow, setCurrentRowData] = useState<API.DevicesItem>();
+  const setCurrentRow = async (id: string): Promise<void> => {
+    await getDeviceInfo(id).then((res) => {
+      console.log(res.data);
+      // setCurrentRowData(res.data);
+    });
+  };
+  const columns: ProColumns<API.DevicesList>[] = [
     {
       dataIndex: 'deviceId',
       title: 'ID',
@@ -59,9 +70,12 @@ const Devices: React.FC = () => {
           <a
             key="edit"
             onClick={() => {
-              setHandleUpdate(true);
-              setCurrentRow(record.id);
+              if (record.isOnline) {
+                setHandleUpdate(true);
+                setCurrentRow(record.deviceId);
+              }
             }}
+            style={{ color: record.isOnline ? '' : '#ccc' }}
           >
             详情
           </a>,
@@ -69,13 +83,14 @@ const Devices: React.FC = () => {
       },
     },
   ];
+
   return (
     <PageContainer>
       <Card>
-        <ProTable<API.OrganizationDetails>
+        <ProTable<API.DevicesList>
           columns={columns}
           request={deviceList}
-          rowKey="code"
+          rowKey="deviceId"
           pagination={{
             showQuickJumper: false,
           }}
@@ -83,6 +98,15 @@ const Devices: React.FC = () => {
           search={false}
         />
       </Card>
+      <ModalForm
+        title="机构详情"
+        visible={updateVisible}
+        modalProps={{
+          onCancel: () => setHandleUpdate(false),
+        }}
+      >
+        <Details></Details>
+      </ModalForm>
     </PageContainer>
   );
 };

@@ -144,4 +144,23 @@ declare namespace API {
     description?: string;
     type?: NoticeIconItemType;
   };
+  type DevicesList = {
+    address: string;
+    deviceId: string;
+    enableCtl: number;
+    enableDebug: number;
+    isOnline: number;
+    name: string;
+  };
+  type DevicesItem = {
+    enableDebug: number;
+    funMode: number;
+    funSpeed: number;
+    isOnline: number;
+    light: number;
+    rh: number;
+    t: number;
+    voc1: number;
+    voc2: number;
+  };
 }
