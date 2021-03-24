@@ -1,18 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
+import { PlusOutlined } from '@ant-design/icons';
 import { Card } from 'antd';
-import type { ProColumns } from '@ant-design/pro-table';
+import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 import ProTable from '@ant-design/pro-table';
-import { message, Descriptions } from 'antd';
-import { ModalForm } from '@ant-design/pro-form';
-import { getDepartmentList, getDepartmentDetail } from '@/services/api-department';
+import { Button, message, Descriptions } from 'antd';
+import { useIntl, FormattedMessage } from 'umi';
+import {
+  createDepartment,
+  getDepartmentList,
+  getDepartmentDetail,
+} from '@/services/api-department';
 
 type tableParamsType = {
   keyword: string;
   current: number;
   pageSize: number;
 };
-
+const handleAdd = async (fields: DepType.newDepartment) => {
+  const hide = message.loading('正在添加');
+  try {
+    await createDepartment({ ...fields });
+    hide();
+    message.success('添加成功');
+    return true;
+  } catch (error) {
+    hide();
+    message.error('添加失败请重试！');
+    return false;
+  }
+};
 const departmentList = async (params: tableParamsType | any) => {
   let data: any = {};
   await getDepartmentList(params.current, params.pageSize, params.keyword).then((res) => {
@@ -29,6 +47,13 @@ const tableParams: tableParamsType = {
   pageSize: 20,
 };
 const DepartmentList: React.FC = () => {
+  /** 新建窗口的弹窗 */
+  const [createModalVisible, handleModalVisible] = useState<boolean>(false);
+
+  /** 国际化配置 */
+
+  const actionRef = useRef<ActionType>();
+  const intl = useIntl();
   const [updateVisible, setHandleUpdate] = useState<boolean>(false);
   const [currentRow, setCurrentRowData] = useState<API.OrganizationDetails>({});
   const setCurrentRow = async (id: string): Promise<void> => {
@@ -76,14 +101,29 @@ const DepartmentList: React.FC = () => {
     <PageContainer>
       <Card>
         <ProTable<API.OrganizationDetails>
+          actionRef={actionRef}
+          headerTitle={intl.formatMessage({
+            id: 'pages.searchTable.title',
+            defaultMessage: '部门列表',
+          })}
           columns={columns}
+          toolBarRender={() => [
+            <Button
+              type="primary"
+              key="primary"
+              onClick={() => {
+                handleModalVisible(true);
+              }}
+            >
+              <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="新建" />
+            </Button>,
+          ]}
           request={departmentList}
           rowKey="id"
           params={tableParams}
           pagination={{
             showQuickJumper: false,
           }}
-          toolBarRender={false}
           search={false}
         />
 
@@ -112,6 +152,39 @@ const DepartmentList: React.FC = () => {
           </Descriptions>
         </ModalForm>
       </Card>
+      <ModalForm<DepType.newDepartment>
+        title={intl.formatMessage({
+          id: 'pages.searchTable.createForm.newDepartment',
+          defaultMessage: '新建部门',
+        })}
+        width="400px"
+        visible={createModalVisible}
+        onVisibleChange={handleModalVisible}
+        onFinish={async (value) => {
+          handleModalVisible(false);
+          const success = await handleAdd(value);
+          if (success) {
+            console.log(success);
+            if (actionRef.current) {
+              actionRef.current.reload();
+            }
+          }
+        }}
+      >
+        <ProFormText
+          label="部门名称"
+          rules={[
+            {
+              required: true,
+              message: '部门名称不能为空',
+            },
+          ]}
+          width="md"
+          name="name"
+        />
+        <ProFormText label="部门代码" width="md" name="code" />
+        <ProFormTextArea label="部门描述" width="md" name="description" />
+      </ModalForm>
     </PageContainer>
   );
 };
