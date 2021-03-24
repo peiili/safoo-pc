@@ -1,9 +1,8 @@
-import { Modal, Select, message } from 'antd';
+import { Card, Modal, Select, message } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { Card } from 'antd';
 import { useModel } from 'umi';
 import type { departmentDomain } from '@/services/api-department';
 import { getChargeList, updateCharge } from '@/services/api-organization';

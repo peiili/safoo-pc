@@ -2,11 +2,11 @@ import { LockOutlined, MobileOutlined, UserOutlined } from '@ant-design/icons';
 import { Alert, message } from 'antd';
 import { setCacheValue } from '@/utils/local-data';
 import React, { useState } from 'react';
-import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
+import ProForm, { ProFormCaptcha, ProFormText } from '@ant-design/pro-form';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import Footer from '@/components/Footer';
+import Registry from './../registry/index';
 import { login, getFakeCaptcha } from '@/services/ant-design-pro/login';
-
 import styles from './index.less';
 
 const LoginMessage: React.FC<{
@@ -34,6 +34,7 @@ const goto = () => {
 
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
+  const [showRegisterModel, setRegister] = useState<boolean>(false);
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -49,7 +50,9 @@ const Login: React.FC = () => {
       });
     }
   };
-
+  const registerAccount = () => {
+    setRegister(true);
+  };
   const handleSubmit = async (values: API.LoginParams) => {
     setSubmitting(true);
     try {
@@ -85,7 +88,6 @@ const Login: React.FC = () => {
               <img alt="logo" className={styles.logo} src="/logo.png" />
             </Link>
           </div>
-          {/* <div className={styles.desc}>Ant Design 是西湖区最具影响力的 Web 设计规范</div> */}
         </div>
 
         <div className={styles.main}>
@@ -274,18 +276,28 @@ const Login: React.FC = () => {
                 marginBottom: 24,
               }}
             >
-              <ProFormCheckbox noStyle name="autoLogin">
-                <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
-              </ProFormCheckbox>
               <a
+                style={{
+                  float: 'left',
+                }}
+                onClick={registerAccount}
+              >
+                <FormattedMessage id="pages.login.registerAccount" defaultMessage="注册账户" />
+              </a>
+              {/* <ProFormCheckbox noStyle name="autoLogin">
+                <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
+              </ProFormCheckbox> */}
+              {/* <a
                 style={{
                   float: 'right',
                 }}
+                onClick={setHandleUpdate}
               >
                 <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
-              </a>
+              </a> */}
             </div>
           </ProForm>
+          <Registry showRegisterModel={showRegisterModel} setRegister={setRegister} />
         </div>
       </div>
       <Footer />

@@ -5,13 +5,19 @@ import { WechatFilled } from '@ant-design/icons';
 import { ubBindWX } from '@/services/api-wx';
 
 const Bind: React.FC = () => {
-  const { initialState } = useModel('@@initialState');
+  const { initialState, setInitialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
-  console.log(currentUser);
-  const unbind = (): void => {
+  const unbind = () => {
     if (currentUser?.wxUnionid) {
-      ubBindWX(currentUser.wxUnionid).then((res) => {
+      ubBindWX(currentUser.wxUnionid).then(async (res) => {
         message.success(res.data);
+        const userInfo = await initialState?.fetchUserInfo?.();
+        if (userInfo) {
+          setInitialState({
+            ...initialState,
+            currentUser: userInfo,
+          });
+        }
       });
     }
   };
