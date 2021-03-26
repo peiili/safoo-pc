@@ -20,16 +20,14 @@ const { Option } = Select;
 
 const handleAdd = async (fields: DepType.newDepartment) => {
   const hide = message.loading('正在添加');
-  try {
-    await createDepartment({ ...fields });
-    hide();
+  const res = await createDepartment({ ...fields });
+  hide();
+  if (res.code === 200) {
     message.success('添加成功');
     return true;
-  } catch (error) {
-    hide();
-    message.error('添加失败请重试！');
-    return false;
   }
+  message.error('添加失败请重试！');
+  return false;
 };
 const departmentList = async (params: DepType.tableParamsType | any) => {
   let data: any = {};

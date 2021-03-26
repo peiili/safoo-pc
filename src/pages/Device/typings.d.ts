@@ -15,4 +15,7 @@ declare namespace DEVICE {
     threshold: number;
     t: number;
   };
+  type bindDevice = {
+    code: string;
+  };
 }
