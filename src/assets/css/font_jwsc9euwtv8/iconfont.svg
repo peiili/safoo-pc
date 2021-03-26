@@ -1,0 +1,29 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<!--
+2013-9-30: Created.
+-->
+<svg>
+<metadata>
+Created by iconfont
+</metadata>
+<defs>
+
+<font id="iconfont" horiz-adv-x="1024" >
+  <font-face
+    font-family="iconfont"
+    font-weight="500"
+    font-stretch="normal"
+    units-per-em="1024"
+    ascent="896"
+    descent="-128"
+  />
+    <missing-glyph />
+    
+    <glyph glyph-name="guizi_o" unicode="&#60350;" d="M682.666667 298.666667h170.666666v-42.666667h-170.666666v-128h-42.666667v213.333333h-213.333333v-213.333333H384v128H213.333333v42.666667h170.666667v128H213.333333v42.666666h170.666667V597.333333h42.666667v-213.333333h213.333333V597.333333h42.666667v-128h170.666666v-42.666666h-170.666666v-128z m213.333333 341.333333v-554.666667H170.666667V640h725.333333zM213.333333 597.333333v-469.333333h640V597.333333H213.333333z"  horiz-adv-x="1024" />
+
+    
+
+
+  </font>
+</defs></svg>

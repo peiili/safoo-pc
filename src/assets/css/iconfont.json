@@ -1,0 +1,65 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "637629",
+      "name": "LC_icon_light_line",
+      "font_class": "LC_icon_light_line",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "1444481",
+      "name": "fan",
+      "font_class": "fan",
+      "unicode": "e726",
+      "unicode_decimal": 59174
+    },
+    {
+      "icon_id": "1802969",
+      "name": "light",
+      "font_class": "light",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "1933758",
+      "name": "delete",
+      "font_class": "delete",
+      "unicode": "e671",
+      "unicode_decimal": 58993
+    },
+    {
+      "icon_id": "5127476",
+      "name": "rename",
+      "font_class": "rename",
+      "unicode": "e7fb",
+      "unicode_decimal": 59387
+    },
+    {
+      "icon_id": "10132057",
+      "name": "position",
+      "font_class": "position",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "13716445",
+      "name": "fan",
+      "font_class": "fan1",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "14591829",
+      "name": "position",
+      "font_class": "position1",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    }
+  ]
+}

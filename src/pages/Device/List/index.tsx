@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getBindDeviceList, getDeviceInfo } from '@/services/api-device';
+import { getBindDeviceList } from '@/services/api-device';
 import { Card } from 'antd';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns } from '@ant-design/pro-table';
@@ -22,13 +22,11 @@ const deviceList = async (params: any) => {
 };
 const Devices: React.FC = () => {
   const [updateVisible, setHandleUpdate] = useState<boolean>(false);
-  // const [currentRow, setCurrentRowData] = useState<API.DevicesItem>();
-  const setCurrentRow = async (id: string): Promise<void> => {
-    await getDeviceInfo(id).then((res) => {
-      console.log(res.data);
-      // setCurrentRowData(res.data);
-    });
+  const [currentId, setCurrentRowId] = useState<string>('');
+  const setCurrentRow = async (id: string) => {
+    await setCurrentRowId(id);
   };
+
   const columns: ProColumns<API.DevicesList>[] = [
     {
       dataIndex: 'deviceId',
@@ -69,7 +67,7 @@ const Devices: React.FC = () => {
         return [
           <a
             key="edit"
-            onClick={() => {
+            onClick={async () => {
               if (record.isOnline) {
                 setHandleUpdate(true);
                 setCurrentRow(record.deviceId);
@@ -99,13 +97,14 @@ const Devices: React.FC = () => {
         />
       </Card>
       <ModalForm
+        width={window.self.innerWidth / 2}
         title="机构详情"
         visible={updateVisible}
         modalProps={{
           onCancel: () => setHandleUpdate(false),
         }}
       >
-        <Details></Details>
+        <Details id={currentId} />
       </ModalForm>
     </PageContainer>
   );
