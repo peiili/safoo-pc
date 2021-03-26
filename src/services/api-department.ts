@@ -16,7 +16,7 @@ export type departmentDomain = {
   type: number;
 };
 type departmentList = {
-  data: { list: departmentDomain[] };
+  data: { list: departmentDomain[]; total: number };
   pageNum: number;
   pageSize: number;
   total: number;

@@ -14,6 +14,7 @@ const organizationList = async (params: any) => {
     data = {
       success: true,
       data: res.data.list,
+      total: res.data.total,
     };
   });
   return data;

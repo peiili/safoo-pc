@@ -37,16 +37,12 @@ const departmentList = async (params: DepType.tableParamsType | any) => {
     data = {
       success: true,
       data: res.data.list,
+      total: res.data.total,
     };
   });
   return data;
 };
 
-const tableParams: DepType.tableParamsType = {
-  keyword: '',
-  current: 1,
-  pageSize: 20,
-};
 const DepartmentList: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
@@ -55,7 +51,7 @@ const DepartmentList: React.FC = () => {
     getChargeList({ orgId: String(currentUser?.organizationId) }).then((e) => {
       setListItems(e.data);
     });
-  }, []);
+  }, [currentUser?.organizationId]);
   /** 负责人列表 */
   function ChargeSelect(props: { currentCharge: string; handleOk: (value: string) => void }) {
     const { handleOk } = props;
@@ -186,7 +182,6 @@ const DepartmentList: React.FC = () => {
           ]}
           request={departmentList}
           rowKey="id"
-          params={tableParams}
           pagination={{
             showQuickJumper: false,
           }}

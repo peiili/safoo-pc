@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Gauge } from '@ant-design/charts';
 import { Row, Col } from 'antd';
 import style from './index.less';
+import ProCard from '@ant-design/pro-card';
+import Logs from './logs';
 import { getDeviceInfo } from '@/services/api-device';
 
 type PropsType = {
@@ -22,8 +24,10 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
   const [lightOn, setLightStatus] = useState<boolean>(false);
   useEffect(() => {
     getDeviceInfo(props.id).then((e) => {
-      setItem(e.data);
-      setLightStatus(Boolean(e.data.light));
+      if (e.data) {
+        setItem(e.data);
+        setLightStatus(Boolean(e.data.light));
+      }
     });
   }, [props.id]);
   const VOC1_config = {
@@ -147,33 +151,39 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
           lineHeight: '16px',
         },
         formatter: function formatter(a: any) {
-          return `湿度:${a.percent * 100}RH`;
+          return `湿度:${(a.percent * 100).toFixed(1)}RH`;
         },
       },
     },
   };
   return (
     <>
-      <Row justify="center" gutter={20}>
-        <Col>
-          <Gauge {...VOC1_config} />
-        </Col>
-        <Col>
-          <Gauge {...VOC2_config} />
-        </Col>
-        <Col>
-          <Gauge {...TMP_config} />
-        </Col>
-        <Col>
-          <Gauge {...RH_config} />
-        </Col>
-      </Row>
+      <ProCard direction="column" ghost gutter={[0, 16]}>
+        <ProCard>
+          <Row gutter={20}>
+            <Col>
+              <Gauge {...VOC1_config} />
+            </Col>
+            <Col>
+              <Gauge {...VOC2_config} />
+            </Col>
+            <Col>
+              <Gauge {...TMP_config} />
+            </Col>
+            <Col>
+              <Gauge {...RH_config} />
+            </Col>
+          </Row>
+        </ProCard>
+        <ProCard gutter={16} ghost style={{ height: 200 }}>
+          <ProCard title="物品" colSpan={16} />
+          <ProCard title="报警记录" colSpan={8}>
+            <Logs id={props.id} />
+          </ProCard>
+        </ProCard>
+      </ProCard>
 
       <Row justify="center" gutter={20}>
-        <Col>
-          <span className={style.iconfont}>&#xebbe;</span>
-          物品
-        </Col>
         <Col>
           <span className={lightOn ? `${style.iconfontAction}` : `${style.iconfont}`}>
             &#xe629;
@@ -183,10 +193,6 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
         <Col>
           <span className={`${style.iconfont} ${style.iconfontFanAction}`}>&#xe620;</span>
           风机
-        </Col>
-        <Col>
-          <span className={style.iconfont}>&#xe616;</span>
-          报警记录
         </Col>
       </Row>
     </>

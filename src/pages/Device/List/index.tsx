@@ -5,7 +5,6 @@ import ProTable from '@ant-design/pro-table';
 import type { ProColumns } from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
 import { FormattedMessage } from 'umi';
-import { ModalForm } from '@ant-design/pro-form';
 import Details from './../Details/index';
 
 // // 获取绑定列表
@@ -84,28 +83,22 @@ const Devices: React.FC = () => {
 
   return (
     <PageContainer>
-      <Card>
-        <ProTable<API.DevicesList>
-          columns={columns}
-          request={deviceList}
-          rowKey="deviceId"
-          pagination={{
-            showQuickJumper: false,
-          }}
-          toolBarRender={false}
-          search={false}
-        />
-      </Card>
-      <ModalForm
-        width={window.self.innerWidth / 2}
-        title="机构详情"
-        visible={updateVisible}
-        modalProps={{
-          onCancel: () => setHandleUpdate(false),
-        }}
-      >
+      {!updateVisible ? (
+        <Card>
+          <ProTable<API.DevicesList>
+            columns={columns}
+            request={deviceList}
+            rowKey="deviceId"
+            pagination={{
+              showQuickJumper: false,
+            }}
+            toolBarRender={false}
+            search={false}
+          />
+        </Card>
+      ) : (
         <Details id={currentId} />
-      </ModalForm>
+      )}
     </PageContainer>
   );
 };
