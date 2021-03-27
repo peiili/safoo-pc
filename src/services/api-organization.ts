@@ -1,6 +1,23 @@
 import request from '@/services/request';
 
 const basePath: string = '/cloud/api/safoo-portal/oganization';
+
+/**
+ * 由总部销售或经销商创建机构
+ * @param {Object} body
+ * @param {Object} body.reqBean -required
+ * @param {String} body.reqBean.address  机构地址
+ * @param {String} body.reqBean.code -required 机构代码,默认为负责人手机号
+ * @param {String} body.reqBean.id
+ * @param {String} body.reqBean.name -required 机构名
+ * @param {String} body.reqBean.areaCode -required 区
+ * @param {String} body.reqBean.cityCode -required 市
+ * @param {String} body.reqBean.provinceCode -required 省
+ */
+export function createOrganization(body: ORGTYPE.create) {
+  return request(`${basePath}/create`, { method: 'POST', data: { reqBean: body } });
+}
+
 /**
  * 查看所负责的机构列表
  * @param {String} name
