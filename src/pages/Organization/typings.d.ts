@@ -4,8 +4,11 @@ declare namespace ORGTYPE {
     code: string;
     id: string;
     name: string;
+    areaName: string;
     areaCode: string;
+    cityName: string;
     cityCode: string;
+    provinceName: string;
     provinceCode: string;
   };
 }
