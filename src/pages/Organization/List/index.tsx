@@ -1,23 +1,22 @@
-// import { Popconfirm, Space, Menu, Dropdown } from 'antd';
 import React, { useState, useRef, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Card } from 'antd';
 import ProTable from '@ant-design/pro-table';
-import { Button, message, Descriptions } from 'antd';
+import { Button, message, Descriptions, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormText, ProFormTextArea, ProFormSelect } from '@ant-design/pro-form';
-import { useIntl, FormattedMessage } from 'umi';
+import { Access, useIntl, FormattedMessage, useModel } from 'umi';
 import { getProvince, getArea, getCity } from '@/services/api-common';
 import {
   createOrganization,
   getOrganizationList,
   getOrganizationDetails,
+  delOrganization,
 } from '@/services/api-organization';
 
 const handleAdd = async (fields: ORGTYPE.create) => {
   const hide = message.loading('正在添加');
-  console.log(fields);
   const res = await createOrganization({ ...fields });
   hide();
   if (res.code === 200) {
@@ -41,6 +40,9 @@ const organizationList = async (params: any) => {
 };
 
 const OrganizationList: React.FC = () => {
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState || {};
+
   const [updateVisible, setHandleUpdate] = useState<boolean>(false);
   const [currentRow, setCurrentRowData] = useState<API.OrganizationDetails>({});
 
@@ -100,6 +102,11 @@ const OrganizationList: React.FC = () => {
   useEffect(() => {
     getPocinceList();
   }, []);
+
+  const delOrg = (id: string) => {
+    return delOrganization(id);
+  };
+
   const columns: ProColumns<API.OrganizationDetails>[] = [
     {
       dataIndex: 'code',
@@ -128,6 +135,29 @@ const OrganizationList: React.FC = () => {
           >
             详情
           </a>,
+          <Access
+            accessible={currentUser?.roleType ? [2, 3].includes(currentUser?.roleType) : false}
+          >
+            <Popconfirm
+              title="是否删除当前机构"
+              onConfirm={async () => {
+                const success = await delOrg(record.id);
+                if (success) {
+                  if (actionRef.current) {
+                    actionRef.current.reload();
+                  }
+                }
+              }}
+              onCancel={() => false}
+              okText="是"
+              cancelText="否"
+              key="del"
+            >
+              <a href="#" style={{ color: 'red' }}>
+                删除
+              </a>
+            </Popconfirm>
+          </Access>,
         ];
       },
     },

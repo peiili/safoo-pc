@@ -16,7 +16,7 @@ declare namespace API {
     organizationName?: string;
     organizationType?: number;
     phone?: string;
-    roleType?: number;
+    roleType: number;
     roles?: RuleListItem[];
     status?: number;
     username: string;

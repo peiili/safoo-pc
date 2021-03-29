@@ -52,7 +52,7 @@ export async function getOrganizationDetails(id: string) {
  * @param {String} pageSize -required false
  */
 export async function delOrganization(id: string) {
-  return request<API.OrganizationResult>(`${basePath}/detail/${id}`, {
+  return request<API.OrganizationResult>(`${basePath}/delete?id=${id}`, {
     method: 'POST',
   });
 }

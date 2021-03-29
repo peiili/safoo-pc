@@ -12,7 +12,7 @@ interface routeType {
 export default function access(initialState: { currentUser?: API.CurrentUser | undefined }) {
   const { currentUser } = initialState || {};
   return {
-    // canAdmin: currentUser && currentUser.roleType === 9,
+    // 路由菜单权限
     adminRouteFilter: (route: routeType) => {
       // console.log(route)
       if (currentUser?.roleType) {
