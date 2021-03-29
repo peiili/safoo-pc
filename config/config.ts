@@ -10,6 +10,11 @@ const { REACT_APP_ENV } = process.env;
 export default defineConfig({
   hash: true,
   antd: {},
+  publicPath: process.env.NODE_ENV === 'production' ? '/cloud/pc/' : '/',
+  outputPath: 'dist_pc/cloud/pc',
+  history: {
+    type: 'hash',
+  },
   dva: {
     hmr: true,
   },
@@ -29,6 +34,32 @@ export default defineConfig({
   },
   dynamicImport: {
     loading: '@ant-design/pro-layout/es/PageLoading',
+  },
+  nodeModulesTransform: {
+    type: 'none',
+    exclude: [],
+  },
+  chunks: ['vendors', 'umi'],
+  chainWebpack: function (config, { webpack }) {
+    config.merge({
+      optimization: {
+        splitChunks: {
+          chunks: 'all',
+          minSize: 30000,
+          minChunks: 3,
+          automaticNameDelimiter: '.',
+          cacheGroups: {
+            vendor: {
+              name: 'vendors',
+              test({ resource }) {
+                return /[\\/]node_modules[\\/]/.test(resource);
+              },
+              priority: 10,
+            },
+          },
+        },
+      },
+    });
   },
   targets: {
     ie: 11,
