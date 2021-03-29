@@ -62,7 +62,7 @@
   {
     path: '/',
     access: 'adminRouteFilter',
-    redirect: '/welcome',
+    redirect: '/account/center',
   },
   {
     path: '/organizationList',
@@ -96,6 +96,10 @@
     rules: [5, 9],
     access: 'adminRouteFilter',
     component: './Service/index.tsx',
+  },
+  {
+    path: '/',
+    redirect: '/account/center',
   },
   {
     path: '/account/center',
