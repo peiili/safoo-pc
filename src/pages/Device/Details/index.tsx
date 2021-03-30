@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Gauge } from '@ant-design/charts';
 import { Row, Col } from 'antd';
-import style from './index.less';
 import ProCard from '@ant-design/pro-card';
 import Logs from './logs';
 import { getDeviceInfo } from '@/services/api-device';
@@ -21,12 +20,12 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
     voc1: 0,
     voc2: 0,
   });
-  const [lightOn, setLightStatus] = useState<boolean>(false);
+  // const [lightOn, setLightStatus] = useState<boolean>(false);
   useEffect(() => {
     getDeviceInfo(props.id).then((e) => {
       if (e.data) {
         setItem(e.data);
-        setLightStatus(Boolean(e.data.light));
+        // setLightStatus(Boolean(e.data.light));
       }
     });
   }, [props.id]);
@@ -183,7 +182,7 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
         </ProCard>
       </ProCard>
 
-      <Row justify="center" gutter={20}>
+      {/* <Row justify="center" gutter={20}>
         <Col>
           <span className={lightOn ? `${style.iconfontAction}` : `${style.iconfont}`}>
             &#xe629;
@@ -194,7 +193,7 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
           <span className={`${style.iconfont} ${style.iconfontFanAction}`}>&#xe620;</span>
           风机
         </Col>
-      </Row>
+      </Row> */}
     </>
   );
 };

@@ -11,4 +11,9 @@ declare namespace ORGTYPE {
     provinceName: string;
     provinceCode: string;
   };
+  type update = {
+    id: string | number;
+    code: string;
+    name: string;
+  };
 }
