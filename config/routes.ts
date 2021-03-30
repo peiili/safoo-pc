@@ -62,7 +62,7 @@
   {
     path: '/',
     access: 'adminRouteFilter',
-    redirect: '/welcome',
+    redirect: '/account/center',
   },
   {
     path: '/organizationList',
