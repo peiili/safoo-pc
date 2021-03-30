@@ -18,6 +18,10 @@ export function createOrganization(body: ORGTYPE.create) {
   return request(`${basePath}/create`, { method: 'POST', data: { reqBean: body } });
 }
 
+export function updateOrganization(data: ORGTYPE.update) {
+  return request(`${basePath}/update`, { method: 'POST', data });
+}
+
 /**
  * 查看所负责的机构列表
  * @param {String} name

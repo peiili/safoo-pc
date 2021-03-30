@@ -15,6 +15,7 @@ import {
   delOrganization,
 } from '@/services/api-organization';
 import OrgDetails from '@/pages/Organization/Details/index';
+import OrgUpdate from '@/pages/Organization/Update/index';
 
 const handleAdd = async (fields: ORGTYPE.create) => {
   const hide = message.loading('正在添加');
@@ -44,13 +45,15 @@ const OrganizationList: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
 
-  const [updateVisible, setHandleUpdate] = useState<boolean>(false);
   const [currentId, setCurrentId] = useState<string>('');
+  const [updateVisible, setHandleUpdate] = useState<boolean>(false);
 
+  /** 更新信息 */
+  const [currentRow, setDetails] = useState<any>({});
+  const [showUpdate, setShowUpdate] = useState<boolean>(false);
+  /** 省市区 */
   const [provinceList, setProvinceList] = useState<any>({});
-
   const [cityList, setCityList] = useState<any>({});
-
   const [areaList, setAreaList] = useState<any>({});
   /** 新建窗口的弹窗 */
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
@@ -60,6 +63,10 @@ const OrganizationList: React.FC = () => {
   const intl = useIntl();
   const setCurrentRow = async (id: string): Promise<void> => {
     setCurrentId(id);
+  };
+  const setUpdate = (row: any) => {
+    setShowUpdate(true);
+    setDetails(row);
   };
 
   /** 获取省份 */
@@ -134,6 +141,14 @@ const OrganizationList: React.FC = () => {
           >
             详情
           </a>,
+          <a
+            key="edit"
+            onClick={() => {
+              setUpdate(record);
+            }}
+          >
+            更新
+          </a>,
           <Access
             key="del"
             accessible={currentUser?.roleType ? [2, 3].includes(currentUser?.roleType) : false}
@@ -186,10 +201,11 @@ const OrganizationList: React.FC = () => {
         />
       </Card>
       {updateVisible && <OrgDetails id={currentId} handle={() => setHandleUpdate(false)} />}
+      <OrgUpdate show={showUpdate} currentRow={currentRow} handle={() => setHandleUpdate(false)} />
       <ModalForm<ORGTYPE.create>
         title={intl.formatMessage({
-          id: 'pages.searchTable.createForm.newDepartment',
-          defaultMessage: '新建部门',
+          id: 'pages.searchTable.createForm.newOrg',
+          defaultMessage: '新建机构',
         })}
         width="400px"
         visible={createModalVisible}
