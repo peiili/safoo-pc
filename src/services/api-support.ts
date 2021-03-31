@@ -56,9 +56,10 @@ export function getMaintainList(body: DeviceType.getMaintainListQuery) {
 }
 /**
  * 生产调试信息录入
- * @param {Object} body
- * @param {String} body.remark
- * @param {String} body.deviceId
+ * @param {Object} data
+ * @param {String} data.remark
+ * @param {String} data.name
+ * @param {String} data.deviceId
  */
 export function productionInput(data: DeviceType.newRepair) {
   return request(`${basePath}/production`, { method: 'POST', data });
