@@ -59,8 +59,8 @@ const OrganizationList: React.FC = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
 
   /** 国际化配置 */
-  const actionRef = useRef<ActionType>();
   const intl = useIntl();
+  const actionRef = useRef<ActionType>();
   const setCurrentRow = async (id: string): Promise<void> => {
     setCurrentId(id);
   };
@@ -91,7 +91,7 @@ const OrganizationList: React.FC = () => {
   /** 获取区域 */
   const getAreaList = async (event: string) => {
     const res = await getArea(event);
-    const obj: object = {};
+    const obj: Record<string, any> = {};
     res.data.forEach((e) => {
       obj[e.areaCode] = e.areaName;
     });
@@ -181,6 +181,7 @@ const OrganizationList: React.FC = () => {
       <Card style={{ display: updateVisible ? 'none' : 'block' }}>
         <ProTable<API.OrganizationDetails>
           columns={columns}
+          actionRef={actionRef}
           request={organizationList}
           rowKey="code"
           pagination={{
@@ -201,7 +202,13 @@ const OrganizationList: React.FC = () => {
         />
       </Card>
       {updateVisible && <OrgDetails id={currentId} handle={() => setHandleUpdate(false)} />}
-      <OrgUpdate show={showUpdate} currentRow={currentRow} handle={() => setHandleUpdate(false)} />
+
+      <OrgUpdate
+        show={showUpdate}
+        currentRow={currentRow}
+        handle={(vis: boolean) => setShowUpdate(vis)}
+        ok={() => actionRef.current && actionRef.current.reload()}
+      />
       <ModalForm<ORGTYPE.create>
         title={intl.formatMessage({
           id: 'pages.searchTable.createForm.newOrg',

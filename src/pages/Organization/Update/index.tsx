@@ -1,37 +1,39 @@
 import { ModalForm, ProFormText } from '@ant-design/pro-form';
-// import { message } from 'antd';
-// import { updateOrganization } from '@/services/api-organization';
+import { Form, message } from 'antd';
+import { updateOrganization } from '@/services/api-organization';
 import { useIntl } from 'umi';
 
-const handleFormValue = (_: any) => {
-  if (Object.keys(_).includes('provinceName')) {
-    // getCityList(_.provinceName);
-  } else if (Object.keys(_).includes('cityName')) {
-    // getAreaList(_.cityName);
-  }
-};
-// const handleAdd = async (fields: ORGTYPE.create) => {
-//   const hide = message.loading('正在添加');
-//   const res = await updateOrganization({ ...fields });
-//   hide();
-//   if (res.code === 200) {
-//     message.success('添加成功');
-//     return true;
-//   }
-//   message.error('添加失败请重试！');
-//   return false;
-// };
 interface OrgUpdateType {
   show: boolean;
   currentRow: API.OrganizationDetails;
-  handle: () => void;
+  handle: (arg0: boolean) => void;
+  ok: () => void;
 }
 const OrgUpdate: React.FC<OrgUpdateType> = (props) => {
+  const [newForm] = Form.useForm();
   const intl = useIntl();
-  console.log(props.currentRow.name);
+  setTimeout(() => {
+    newForm.setFieldsValue({
+      name: props.currentRow.name,
+      code: props.currentRow.code,
+    });
+  }, 100);
+
+  const handleAdd = async (fields: ORGTYPE.update) => {
+    const hide = message.loading('正在添加');
+    const res = await updateOrganization({ ...fields, id: props.currentRow.id });
+    hide();
+    if (res.code === 200) {
+      message.success('更新成功');
+      return true;
+    }
+    message.error('更新失败请重试！');
+    return false;
+  };
   return (
     <>
       <ModalForm<ORGTYPE.update>
+        form={newForm}
         title={intl.formatMessage({
           id: 'pages.searchTable.createForm.updateOrg',
           defaultMessage: '更新机构',
@@ -39,21 +41,12 @@ const OrgUpdate: React.FC<OrgUpdateType> = (props) => {
         width="400px"
         visible={props.show}
         onVisibleChange={props.handle}
-        onValuesChange={(_) => {
-          handleFormValue(_);
-        }}
-        initialValues={{
-          name: props.currentRow.name,
-          code: '123132',
-        }}
-        onFinish={async () => {
-          // const success = await handleAdd(value);
-          // if (success) {
-          //   if (actionRef.current) {
-          //     actionRef.current.reload();
-          //   }
-          // }
-          props.handle();
+        onFinish={async (values) => {
+          const success = await handleAdd(values);
+          if (success) {
+            props.handle(false);
+            props.ok();
+          }
         }}
       >
         <ProFormText
