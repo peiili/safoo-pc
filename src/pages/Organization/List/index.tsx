@@ -142,7 +142,7 @@ const OrganizationList: React.FC = () => {
             详情
           </a>,
           <a
-            key="edit"
+            key="update"
             onClick={() => {
               setUpdate(record);
             }}
@@ -235,7 +235,7 @@ const OrganizationList: React.FC = () => {
           rules={[
             {
               required: true,
-              message: '部门名称不能为空',
+              message: '机构名称不能为空',
             },
           ]}
           width="md"

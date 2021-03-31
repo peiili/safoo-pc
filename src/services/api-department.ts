@@ -67,3 +67,7 @@ export function delDepartment(id: string) {
 export function updateDepartmentCharge(body: DepType.updateCharge) {
   return request(`${basePath}/assignMgr`, { method: 'POST', data: body });
 }
+
+export function updateDepartment(data: DepType.updateDep) {
+  return request(`${basePath}/update`, { method: 'POST', data });
+}
