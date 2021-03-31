@@ -59,7 +59,7 @@ const Production: React.FC = () => {
   const columns: ProColumns<API.OrganizationDetails>[] = [
     {
       dataIndex: 'deviceId',
-      title: 'id',
+      title: 'ID',
     },
     {
       dataIndex: 'name',
