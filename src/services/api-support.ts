@@ -20,22 +20,10 @@ type getSetupListQuery = getProductionListQuery;
  * @param {String} data.measure
  * @param {String} data.type  1是维修，2是维保
  */
-export function maintainInput({
-  cause,
-  description,
-  deviceId,
-  measure,
-  type,
-}: DeviceType.maintainInputQuery) {
+export function maintainInput(data: DeviceType.maintainInputQuery) {
   return request(`${basePath}/maintenance`, {
     method: 'POST',
-    data: {
-      cause,
-      description,
-      deviceId,
-      measure,
-      type,
-    },
+    data,
   });
 }
 /**

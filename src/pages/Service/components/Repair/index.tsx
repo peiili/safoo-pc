@@ -38,7 +38,6 @@ function DetailsModal(props: { details: Record<string, any> }) {
 type FormType = {
   deviceId: string;
   description: string;
-  cause: string;
   measure: string;
 };
 
@@ -201,11 +200,11 @@ const Repair: React.FC = () => {
         }}
       >
         <ProFormText
-          label="设备码"
+          label="柜机码"
           rules={[
             {
               required: true,
-              message: '设备码不能为空',
+              message: '柜机码不能为空',
             },
           ]}
           width="md"
@@ -224,26 +223,14 @@ const Repair: React.FC = () => {
           name="description"
         />
         <ProFormTextArea
-          label="故障原因"
+          label="维修措施"
           rules={[
             {
               required: true,
-              message: '故障原因不能为空',
+              message: '维修措施不能为空',
             },
           ]}
-          placeholder="请输入故障原因"
-          width="md"
-          name="cause"
-        />
-        <ProFormTextArea
-          label="处理措施"
-          rules={[
-            {
-              required: true,
-              message: '处理措施不能为空',
-            },
-          ]}
-          placeholder="请输入处理措施"
+          placeholder="请输入维修措施"
           width="md"
           name="measure"
         />

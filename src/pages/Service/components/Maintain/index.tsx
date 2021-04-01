@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import type { ProColumns } from '@ant-design/pro-table';
+import React, { useState, useRef } from 'react';
+import { PlusOutlined } from '@ant-design/icons';
+import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { getMaintainList } from '@/services/api-support';
-import { Button, Descriptions } from 'antd';
-import { ModalForm } from '@ant-design/pro-form';
+import { useIntl, FormattedMessage } from 'umi';
+import { getMaintainList, maintainInput } from '@/services/api-support';
+import { Button, Descriptions, Form, message } from 'antd';
+import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 
 function DetailsModal(props: { details: Record<string, any> }) {
   const column: Record<string, any>[] = [
@@ -34,6 +36,11 @@ function DetailsModal(props: { details: Record<string, any> }) {
   );
 }
 const Maintain: React.FC = () => {
+  const actionRef = useRef<ActionType>();
+  const intl = useIntl();
+  const [newForm] = Form.useForm();
+  /** 新建窗口的弹窗 */
+  const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const productionList = async () => {
     let data: any = {};
     await getMaintainList({
@@ -42,7 +49,7 @@ const Maintain: React.FC = () => {
       end: '',
       pageNum: '1',
       pageSize: '20',
-      type: '2',
+      type: 2,
     }).then((res) => {
       data = {
         success: true,
@@ -56,6 +63,24 @@ const Maintain: React.FC = () => {
   const setCurrentRow = (data: any): void => {
     setupShowDetails(true);
     setDetails(data);
+  };
+  type FormType = {
+    deviceId: string;
+    description: string;
+    cause: string;
+    measure: string;
+  };
+  const handleAdd = async (fields: FormType) => {
+    const hide = message.loading('正在添加');
+    const res = await maintainInput({ ...fields, type: 2 });
+    hide();
+    if (res.code === 200) {
+      message.success('添加成功');
+      newForm.resetFields();
+      return true;
+    }
+    message.error('添加失败请重试！');
+    return false;
   };
   const columns: ProColumns<API.OrganizationDetails>[] = [
     {
@@ -118,7 +143,17 @@ const Maintain: React.FC = () => {
         pagination={{
           showQuickJumper: false,
         }}
-        toolBarRender={false}
+        toolBarRender={() => [
+          <Button
+            type="primary"
+            key="primary"
+            onClick={() => {
+              handleModalVisible(true);
+            }}
+          >
+            <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="新增" />
+          </Button>,
+        ]}
         search={false}
       />
       <ModalForm<{
@@ -142,6 +177,73 @@ const Maintain: React.FC = () => {
         }}
       >
         <DetailsModal details={currentRow} />
+      </ModalForm>
+      <ModalForm<FormType>
+        title={intl.formatMessage({
+          id: 'pages.searchTable.createForm.new',
+          defaultMessage: '',
+        })}
+        width="400px"
+        form={newForm}
+        visible={createModalVisible}
+        onVisibleChange={handleModalVisible}
+        onFinish={async (value) => {
+          const success = await handleAdd(value);
+          if (success) {
+            handleModalVisible(false);
+            if (actionRef.current) {
+              actionRef.current.reload();
+            }
+          }
+        }}
+      >
+        <ProFormText
+          label="设备码"
+          rules={[
+            {
+              required: true,
+              message: '设备码不能为空',
+            },
+          ]}
+          width="md"
+          name="deviceId"
+        />
+        <ProFormTextArea
+          label="维保说明"
+          rules={[
+            {
+              required: true,
+              message: '维保说明不能为空',
+            },
+          ]}
+          placeholder="请输入维保说明"
+          width="md"
+          name="description"
+        />
+        <ProFormTextArea
+          label="维保原因"
+          rules={[
+            {
+              required: true,
+              message: '维保原因不能为空',
+            },
+          ]}
+          placeholder="请输入维保原因"
+          width="md"
+          name="cause"
+        />
+        <ProFormTextArea
+          label="维保措施"
+          rules={[
+            {
+              required: true,
+              message: '维保措施不能为空',
+            },
+          ]}
+          placeholder="请输入维保措施"
+          width="md"
+          name="measure"
+        />
       </ModalForm>
     </>
   );

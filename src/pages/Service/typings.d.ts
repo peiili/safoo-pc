@@ -14,7 +14,7 @@ declare namespace DeviceType {
     description: string;
     deviceId: string;
     measure: string;
-    type: number;
+    type: 1 | 2;
   };
   type getMaintainListQuery = {
     begin: string;
