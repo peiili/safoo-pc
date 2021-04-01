@@ -24,4 +24,10 @@ declare namespace DeviceType {
     pageSize: string;
     type: number;
   };
+  type Install = {
+    deviceId: string;
+    orgId: number;
+    orgName: string;
+    remark: string;
+  };
 }

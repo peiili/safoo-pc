@@ -95,3 +95,15 @@ export function getSetupList(body: getSetupListQuery) {
     { method: 'GET' }
   );
 }
+/**
+ * getSetupList
+ * @param {Object} data
+ * @param {String} data.deviceId 设备编号
+ * @param {String} data.orgId
+ * @param {String} data.orgName
+ * @param {String} data.remark
+ */
+
+export function setupInstall(data: DeviceType.Install) {
+  return request(`${basePath}/setup`, { method: 'POST', data });
+}

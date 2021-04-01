@@ -30,8 +30,8 @@ export function updateOrganization(data: ORGTYPE.update) {
  */
 export async function getOrganizationList(
   name: string | undefined,
-  pageNum: number,
-  pageSize: number
+  pageNum: number = 1,
+  pageSize: number = 20
 ) {
   return request<API.OrganizationResult>(
     `${basePath}/list?name=${name}&pageNum=${pageNum}&pageSize=${pageSize}`,
