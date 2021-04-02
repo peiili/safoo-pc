@@ -16,7 +16,7 @@ const Service: React.FC = () => {
     <>
       <PageContainer>
         <Card>
-          <Tabs defaultActiveKey="maintain" onChange={callback}>
+          <Tabs defaultActiveKey="production" onChange={callback}>
             <TabPane
               tab={intl.formatMessage({
                 id: 'pages.service.production',

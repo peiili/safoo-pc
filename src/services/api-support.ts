@@ -95,3 +95,7 @@ export function getSetupList(body: getSetupListQuery) {
 export function setupInstall(data: DeviceType.Install) {
   return request(`${basePath}/setup`, { method: 'POST', data });
 }
+
+export function getProductInfo(keyWords: string) {
+  return request(`${basePath}/productInfo/${keyWords}`, { method: 'GET' });
+}

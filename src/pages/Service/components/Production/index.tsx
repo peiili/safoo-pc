@@ -2,10 +2,10 @@ import React, { useState, useRef } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { getProductionList, productionInput } from '@/services/api-support';
+import { getProductionList, productionInput, getProductInfo } from '@/services/api-support';
 import { useIntl, FormattedMessage } from 'umi';
-import { Button, Descriptions, Form, message } from 'antd';
-import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
+import { AutoComplete, Button, Descriptions, Form, message } from 'antd';
+import ProForm, { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 
 function DetailsModal(props: { details: Record<string, any> }) {
   const column: Record<string, any>[] = [
@@ -34,6 +34,18 @@ function DetailsModal(props: { details: Record<string, any> }) {
       </Descriptions>
     </>
   );
+}
+let a: number;
+function getList(keywords: string) {
+  return new Promise<API.OrganizationResult>((resolve) => {
+    if (a) {
+      clearTimeout(a);
+    }
+    a = window.setTimeout(async () => {
+      const res = await getProductInfo(keywords);
+      resolve(res);
+    }, 500);
+  });
 }
 type FormType = {
   deviceId: string;
@@ -65,6 +77,7 @@ const Production: React.FC = () => {
   };
   const [showDetails, setupShowDetails] = useState<boolean>(false);
   const [currentRow, setDetails] = useState<any>({});
+  const [selectEnum, setSelectEnum] = useState<{ value: string }[]>([]);
   const setCurrentRow = (data: any): void => {
     setupShowDetails(true);
     setDetails(data);
@@ -133,6 +146,16 @@ const Production: React.FC = () => {
       },
     },
   ];
+
+  const handleSearch = async (name?: string) => {
+    if (name) {
+      const res = await getList(name);
+      const data = res.data?.list.map((d) => {
+        return { value: d.name };
+      });
+      setSelectEnum(data);
+    }
+  };
   return (
     <>
       <ProTable<API.OrganizationDetails>
@@ -196,7 +219,8 @@ const Production: React.FC = () => {
           }
         }}
       >
-        <ProFormText
+        <ProForm.Item
+          name="deviceId"
           label="设备码"
           rules={[
             {
@@ -204,9 +228,14 @@ const Production: React.FC = () => {
               message: '设备码不能为空',
             },
           ]}
-          width="md"
-          name="deviceId"
-        />
+        >
+          <AutoComplete
+            options={selectEnum}
+            style={{ width: 328 }}
+            onSearch={handleSearch}
+            placeholder="请输入设备码"
+          />
+        </ProForm.Item>
         <ProFormText
           label="设备名称"
           rules={[
