@@ -3,17 +3,19 @@ import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Card } from 'antd';
 import ProTable from '@ant-design/pro-table';
-import { Button, message, Descriptions, Popconfirm } from 'antd';
+import { Button, message, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormText, ProFormTextArea, ProFormSelect } from '@ant-design/pro-form';
 import { Access, useIntl, FormattedMessage, useModel } from 'umi';
 import { getProvince, getArea, getCity } from '@/services/api-common';
+
 import {
   createOrganization,
   getOrganizationList,
-  getOrganizationDetails,
   delOrganization,
 } from '@/services/api-organization';
+import OrgDetails from '@/pages/Organization/Details/index';
+import OrgUpdate from '@/pages/Organization/Update/index';
 
 const handleAdd = async (fields: ORGTYPE.create) => {
   const hide = message.loading('正在添加');
@@ -43,24 +45,28 @@ const OrganizationList: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
 
+  const [currentId, setCurrentId] = useState<string>('');
   const [updateVisible, setHandleUpdate] = useState<boolean>(false);
-  const [currentRow, setCurrentRowData] = useState<API.OrganizationDetails>({});
 
-  const [procinceList, setProvinceList] = useState<any>({});
-
+  /** 更新信息 */
+  const [currentRow, setDetails] = useState<any>({});
+  const [showUpdate, setShowUpdate] = useState<boolean>(false);
+  /** 省市区 */
+  const [provinceList, setProvinceList] = useState<any>({});
   const [cityList, setCityList] = useState<any>({});
-
   const [areaList, setAreaList] = useState<any>({});
   /** 新建窗口的弹窗 */
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
 
   /** 国际化配置 */
-  const actionRef = useRef<ActionType>();
   const intl = useIntl();
+  const actionRef = useRef<ActionType>();
   const setCurrentRow = async (id: string): Promise<void> => {
-    await getOrganizationDetails(id).then((res) => {
-      setCurrentRowData(res.data);
-    });
+    setCurrentId(id);
+  };
+  const setUpdate = (row: any) => {
+    setShowUpdate(true);
+    setDetails(row);
   };
 
   /** 获取省份 */
@@ -85,7 +91,7 @@ const OrganizationList: React.FC = () => {
   /** 获取区域 */
   const getAreaList = async (event: string) => {
     const res = await getArea(event);
-    const obj: object = {};
+    const obj: Record<string, any> = {};
     res.data.forEach((e) => {
       obj[e.areaCode] = e.areaName;
     });
@@ -135,7 +141,16 @@ const OrganizationList: React.FC = () => {
           >
             详情
           </a>,
+          <a
+            key="update"
+            onClick={() => {
+              setUpdate(record);
+            }}
+          >
+            更新
+          </a>,
           <Access
+            key="del"
             accessible={currentUser?.roleType ? [2, 3].includes(currentUser?.roleType) : false}
           >
             <Popconfirm
@@ -151,7 +166,6 @@ const OrganizationList: React.FC = () => {
               onCancel={() => false}
               okText="是"
               cancelText="否"
-              key="del"
             >
               <a href="#" style={{ color: 'red' }}>
                 删除
@@ -164,9 +178,10 @@ const OrganizationList: React.FC = () => {
   ];
   return (
     <PageContainer>
-      <Card>
+      <Card style={{ display: updateVisible ? 'none' : 'block' }}>
         <ProTable<API.OrganizationDetails>
           columns={columns}
+          actionRef={actionRef}
           request={organizationList}
           rowKey="code"
           pagination={{
@@ -185,36 +200,19 @@ const OrganizationList: React.FC = () => {
           ]}
           search={false}
         />
-
-        <ModalForm<{
-          name: string;
-          company: string;
-        }>
-          title="机构详情"
-          visible={updateVisible}
-          modalProps={{
-            onCancel: () => setHandleUpdate(false),
-          }}
-          onFinish={async () => {
-            message.success('提交成功');
-            return true;
-          }}
-        >
-          <Descriptions>
-            <Descriptions.Item label="机构码">{currentRow.code}</Descriptions.Item>
-            <Descriptions.Item label="机构名称">{currentRow.name}</Descriptions.Item>
-            <Descriptions.Item label="负责人">{currentRow.mgrUserName}</Descriptions.Item>
-            <Descriptions.Item label="手机号">{currentRow.mgrUserPhone}</Descriptions.Item>
-            <Descriptions.Item label="销售人员">{currentRow.saleUserId}</Descriptions.Item>
-            <Descriptions.Item label="技术支持">{currentRow.techUserName}</Descriptions.Item>
-            <Descriptions.Item label="客服人员">{currentRow.srvUserName}</Descriptions.Item>
-          </Descriptions>
-        </ModalForm>
       </Card>
+      {updateVisible && <OrgDetails id={currentId} handle={() => setHandleUpdate(false)} />}
+
+      <OrgUpdate
+        show={showUpdate}
+        currentRow={currentRow}
+        handle={(vis: boolean) => setShowUpdate(vis)}
+        ok={() => actionRef.current && actionRef.current.reload()}
+      />
       <ModalForm<ORGTYPE.create>
         title={intl.formatMessage({
-          id: 'pages.searchTable.createForm.newDepartment',
-          defaultMessage: '新建部门',
+          id: 'pages.searchTable.createForm.newOrg',
+          defaultMessage: '新建机构',
         })}
         width="400px"
         visible={createModalVisible}
@@ -237,7 +235,7 @@ const OrganizationList: React.FC = () => {
           rules={[
             {
               required: true,
-              message: '部门名称不能为空',
+              message: '机构名称不能为空',
             },
           ]}
           width="md"
@@ -257,7 +255,7 @@ const OrganizationList: React.FC = () => {
         <ProFormSelect
           name="provinceName"
           label="省份"
-          valueEnum={procinceList}
+          valueEnum={provinceList}
           placeholder="请选择所在省份"
           rules={[{ required: true, message: '请选择所在省份!' }]}
         />

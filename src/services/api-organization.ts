@@ -18,6 +18,10 @@ export function createOrganization(body: ORGTYPE.create) {
   return request(`${basePath}/create`, { method: 'POST', data: { reqBean: body } });
 }
 
+export function updateOrganization(data: ORGTYPE.update) {
+  return request(`${basePath}/update`, { method: 'POST', data });
+}
+
 /**
  * 查看所负责的机构列表
  * @param {String} name
@@ -26,8 +30,8 @@ export function createOrganization(body: ORGTYPE.create) {
  */
 export async function getOrganizationList(
   name: string | undefined,
-  pageNum: number,
-  pageSize: number
+  pageNum: number = 1,
+  pageSize: number = 20
 ) {
   return request<API.OrganizationResult>(
     `${basePath}/list?name=${name}&pageNum=${pageNum}&pageSize=${pageSize}`,

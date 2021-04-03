@@ -17,4 +17,10 @@ declare namespace DepType {
     orgDeptId: string;
     assignType: '4' | '7' | '8' | '9';
   };
+  type updateDep = {
+    id: string;
+    description: string;
+    code: string;
+    name: string;
+  };
 }

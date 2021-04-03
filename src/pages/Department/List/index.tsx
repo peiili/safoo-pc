@@ -15,6 +15,7 @@ import {
   updateDepartmentCharge,
 } from '@/services/api-department';
 import { getChargeList } from '@/services/api-organization';
+import DepUpdate from '@/pages/Department/Update/index';
 
 const { Option } = Select;
 
@@ -77,6 +78,9 @@ const DepartmentList: React.FC = () => {
   const intl = useIntl();
   const [updateVisible, setHandleUpdate] = useState<boolean>(false);
   const [currentRow, setCurrentRowData] = useState<API.OrganizationDetails>({});
+  /** 更新信息 */
+  const [currentDetails, setDetails] = useState<any>({});
+  const [showUpdate, setShowUpdate] = useState<boolean>(false);
 
   const subminCharge = async (userid: string) => {
     return await updateDepartmentCharge({
@@ -90,6 +94,12 @@ const DepartmentList: React.FC = () => {
       setCurrentRowData(res.data);
     });
   };
+
+  const setUpdate = (row: any) => {
+    setShowUpdate(true);
+    setDetails(row);
+  };
+
   const delDep = (id: string) => {
     return delDepartment(id);
   };
@@ -132,7 +142,15 @@ const DepartmentList: React.FC = () => {
               setCurrentRow(record.id);
             }}
           >
-            编辑
+            详情
+          </a>,
+          <a
+            key="update"
+            onClick={() => {
+              setUpdate(record);
+            }}
+          >
+            更新
           </a>,
           <Popconfirm
             title="是否删除当前部门"
@@ -220,6 +238,13 @@ const DepartmentList: React.FC = () => {
           </Descriptions>
         </ModalForm>
       </Card>
+
+      <DepUpdate
+        show={showUpdate}
+        currentRow={currentDetails}
+        handle={(vis: boolean) => setShowUpdate(vis)}
+        ok={() => actionRef.current && actionRef.current.reload()}
+      />
       <ModalForm<DepType.newDepartment>
         title={intl.formatMessage({
           id: 'pages.searchTable.createForm.newDepartment',

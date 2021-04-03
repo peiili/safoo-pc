@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import type { ProColumns } from '@ant-design/pro-table';
+import React, { useState, useRef } from 'react';
+import { PlusOutlined } from '@ant-design/icons';
+import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { getProductionList } from '@/services/api-support';
-import { Button, Descriptions } from 'antd';
-import { ModalForm } from '@ant-design/pro-form';
+import { getProductionList, productionInput, getProductInfo } from '@/services/api-support';
+import { useIntl, FormattedMessage } from 'umi';
+import { AutoComplete, Button, Descriptions, Form, message } from 'antd';
+import ProForm, { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 
 function DetailsModal(props: { details: Record<string, any> }) {
   const column: Record<string, any>[] = [
@@ -33,7 +35,30 @@ function DetailsModal(props: { details: Record<string, any> }) {
     </>
   );
 }
+let a: number;
+function getList(keywords: string) {
+  return new Promise<API.OrganizationResult>((resolve) => {
+    if (a) {
+      clearTimeout(a);
+    }
+    a = window.setTimeout(async () => {
+      const res = await getProductInfo(keywords);
+      resolve(res);
+    }, 500);
+  });
+}
+type FormType = {
+  deviceId: string;
+  name: string;
+  remark: string;
+};
+
 const Production: React.FC = () => {
+  const actionRef = useRef<ActionType>();
+  const intl = useIntl();
+  const [newForm] = Form.useForm();
+  /** 新建窗口的弹窗 */
+  const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const productionList = async () => {
     let data: any = {};
     await getProductionList({
@@ -52,14 +77,27 @@ const Production: React.FC = () => {
   };
   const [showDetails, setupShowDetails] = useState<boolean>(false);
   const [currentRow, setDetails] = useState<any>({});
+  const [selectEnum, setSelectEnum] = useState<{ value: string }[]>([]);
   const setCurrentRow = (data: any): void => {
     setupShowDetails(true);
     setDetails(data);
   };
+  const handleAdd = async (fields: FormType) => {
+    const hide = message.loading('正在添加');
+    const res = await productionInput({ ...fields });
+    hide();
+    if (res.code === 200) {
+      message.success('添加成功');
+      newForm.resetFields();
+      return true;
+    }
+    message.error('添加失败请重试！');
+    return false;
+  };
   const columns: ProColumns<API.OrganizationDetails>[] = [
     {
       dataIndex: 'deviceId',
-      title: 'id',
+      title: 'ID',
     },
     {
       dataIndex: 'name',
@@ -108,6 +146,16 @@ const Production: React.FC = () => {
       },
     },
   ];
+
+  const handleSearch = async (name?: string) => {
+    if (name) {
+      const res = await getList(name);
+      const data = res.data?.list.map((d) => {
+        return { value: d.name };
+      });
+      setSelectEnum(data);
+    }
+  };
   return (
     <>
       <ProTable<API.OrganizationDetails>
@@ -117,7 +165,17 @@ const Production: React.FC = () => {
         pagination={{
           showQuickJumper: false,
         }}
-        toolBarRender={false}
+        toolBarRender={() => [
+          <Button
+            type="primary"
+            key="primary"
+            onClick={() => {
+              handleModalVisible(true);
+            }}
+          >
+            <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="新增" />
+          </Button>,
+        ]}
         search={false}
       />
       <ModalForm<{
@@ -141,6 +199,56 @@ const Production: React.FC = () => {
         }}
       >
         <DetailsModal details={currentRow} />
+      </ModalForm>
+      <ModalForm<FormType>
+        title={intl.formatMessage({
+          id: 'pages.searchTable.createForm.new',
+          defaultMessage: '',
+        })}
+        width="400px"
+        form={newForm}
+        visible={createModalVisible}
+        onVisibleChange={handleModalVisible}
+        onFinish={async (value) => {
+          const success = await handleAdd(value);
+          if (success) {
+            handleModalVisible(false);
+            if (actionRef.current) {
+              actionRef.current.reload();
+            }
+          }
+        }}
+      >
+        <ProForm.Item
+          name="deviceId"
+          label="设备码"
+          rules={[
+            {
+              required: true,
+              message: '设备码不能为空',
+            },
+          ]}
+        >
+          <AutoComplete
+            options={selectEnum}
+            style={{ width: 328 }}
+            onSearch={handleSearch}
+            placeholder="请输入设备码"
+          />
+        </ProForm.Item>
+        <ProFormText
+          label="设备名称"
+          rules={[
+            {
+              required: true,
+              message: '设备名称不能为空',
+            },
+          ]}
+          placeholder="请输入设备名称"
+          width="md"
+          name="name"
+        />
+        <ProFormTextArea label="备注" width="md" name="remark" />
       </ModalForm>
     </>
   );

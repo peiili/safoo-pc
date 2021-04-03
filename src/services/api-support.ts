@@ -1,13 +1,7 @@
 import request from '@/services/request';
 
 const basePath: string = '/cloud/api/safoo-portal/prodlifecycle';
-type maintainInputQuery = {
-  cause: string;
-  description: string;
-  deviceId: string;
-  measure: string;
-  type: string;
-};
+
 type getProductionListQuery = {
   begin: string;
   deviceId: string;
@@ -16,30 +10,21 @@ type getProductionListQuery = {
   pageSize: string;
 };
 type getSetupListQuery = getProductionListQuery;
-type getMaintainListQuery = {
-  begin: string;
-  deviceId: string;
-  end: string;
-  pageNum: string;
-  pageSize: string;
-  type: string;
-};
-type productionInputQuery = {
-  remark: string;
-  deviceId: string;
-};
 
 /**
  * 维修维保信息录入
- * @param {Object} body
- * @param {String} body.cause
- * @param {String} body.description
- * @param {String} body.deviceId
- * @param {String} body.measure
- * @param {String} body.type  1是维修，2是维保
+ * @param {Object} data
+ * @param {String} data.cause
+ * @param {String} data.description
+ * @param {String} data.deviceId
+ * @param {String} data.measure
+ * @param {String} data.type  1是维修，2是维保
  */
-export function maintainInput(body: maintainInputQuery) {
-  return request(`${basePath}/maintenance`, { method: 'POST', data: body });
+export function maintainInput(data: DeviceType.maintainInputQuery) {
+  return request(`${basePath}/maintenance`, {
+    method: 'POST',
+    data,
+  });
 }
 /**
  * getMaintainList
@@ -51,7 +36,7 @@ export function maintainInput(body: maintainInputQuery) {
  * @param {String} body.pageSize
  * @param {String} body.type  1是维修，2是维保
  */
-export function getMaintainList(body: getMaintainListQuery) {
+export function getMaintainList(body: DeviceType.getMaintainListQuery) {
   return request(
     `${basePath}/maintenanceList?type=${body.type}&begin=${body.begin}&deviceId=${body.deviceId}&end=${body.end}&pageNum=${body.pageNum}&pageSize=${body.pageSize}`,
     { method: 'get' }
@@ -59,12 +44,13 @@ export function getMaintainList(body: getMaintainListQuery) {
 }
 /**
  * 生产调试信息录入
- * @param {Object} body
- * @param {String} body.remark
- * @param {String} body.deviceId
+ * @param {Object} data
+ * @param {String} data.remark
+ * @param {String} data.name
+ * @param {String} data.deviceId
  */
-export function productionInput(body: productionInputQuery) {
-  return request(`${basePath}/production`, { method: 'POST', data: body });
+export function productionInput(data: DeviceType.newRepair) {
+  return request(`${basePath}/production`, { method: 'POST', data });
 }
 /**
  * getProductionList
@@ -96,4 +82,20 @@ export function getSetupList(body: getSetupListQuery) {
     `${basePath}/setupList?begin=${body.begin}&deviceId=${body.deviceId}&end=${body.end}&pageNum=${body.pageNum}&pageSize=${body.pageSize}`,
     { method: 'GET' }
   );
+}
+/**
+ * getSetupList
+ * @param {Object} data
+ * @param {String} data.deviceId 设备编号
+ * @param {String} data.orgId
+ * @param {String} data.orgName
+ * @param {String} data.remark
+ */
+
+export function setupInstall(data: DeviceType.Install) {
+  return request(`${basePath}/setup`, { method: 'POST', data });
+}
+
+export function getProductInfo(keyWords: string) {
+  return request(`${basePath}/productInfo/${keyWords}`, { method: 'GET' });
 }
