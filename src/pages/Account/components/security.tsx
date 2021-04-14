@@ -13,7 +13,6 @@ const Security: React.FC = () => {
       description: '',
       actions: [
         <a
-          href="#"
           onClick={() => {
             setHandleUpdate();
           }}

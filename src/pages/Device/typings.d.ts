@@ -1,5 +1,7 @@
 declare namespace DEVICE {
   type deviceLogs = {
+    time: string;
+    alarmType: string;
     year: number;
     month: number;
     date: number;
