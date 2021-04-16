@@ -3,6 +3,18 @@ import ProCard from '@ant-design/pro-card';
 import { getDeviceLog } from '@/services/api-device';
 import { Empty, Row, Col } from 'antd';
 
+const alarmTypeEnums = function (type: number | string): string {
+  const enums = {
+    0: '温度过高',
+    1: '温度过低',
+    2: '湿度过高',
+    3: '湿度过低',
+    4: 'VOC1浓度过高',
+    5: 'VOC2浓度过高',
+    6: 'SIM卡流量预警',
+  };
+  return enums[type];
+};
 const LogList = (lists: DEVICE.deviceLogs[]) => {
   return (
     <div style={{ height: '250px', overflow: 'auto' }}>
@@ -22,7 +34,7 @@ const LogList = (lists: DEVICE.deviceLogs[]) => {
                 </div>
               </div>
             </Col>
-            <Col span={8}>{item.alarmType}</Col>
+            <Col span={8}>{alarmTypeEnums(item.alarmType)}</Col>
             <Col span={1} style={{ fontSize: '16px' }}>
               {/* <van-icon v-if="item.clear === 0" name="bulb-o" color="#ec0721" />
               <van-icon
