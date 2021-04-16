@@ -174,7 +174,7 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
             </Col>
           </Row>
         </ProCard>
-        <ProCard gutter={16} ghost style={{ height: 200 }}>
+        <ProCard gutter={16} ghost style={{ height: '400px' }}>
           <ProCard title="物品" colSpan={16} />
           <ProCard title="报警记录" colSpan={8}>
             <Logs id={props.id} />
