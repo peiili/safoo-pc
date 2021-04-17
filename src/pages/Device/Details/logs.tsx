@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ProCard from '@ant-design/pro-card';
 import { getDeviceLog } from '@/services/api-device';
-import { Empty, Row, Col } from 'antd';
+import { Empty, List, Row, Col } from 'antd';
 
 const alarmTypeEnums = function (type: number | string): string {
   const enums = {
@@ -19,32 +19,40 @@ const LogList = (lists: DEVICE.deviceLogs[]) => {
   return (
     <div style={{ height: '250px', overflow: 'auto' }}>
       {lists.length ? (
-        lists.map((item) => (
-          <Row key={item.number}>
-            <Col span={15}>
-              <div>
-                <div className="time">
-                  <span>{item.time}</span>
-                </div>
-                <div className="info">
-                  <span>温度:{item.t} </span>
-                  <span>湿度:{item.rh} </span>
-                  <span>voc1:{item.voc1} </span>
-                  <span>voc2:{item.voc2} </span>
-                </div>
-              </div>
-            </Col>
-            <Col span={8}>{alarmTypeEnums(item.alarmType)}</Col>
-            <Col span={1} style={{ fontSize: '16px' }}>
-              {/* <van-icon v-if="item.clear === 0" name="bulb-o" color="#ec0721" />
-              <van-icon
-                v-if="item.clear === 1"
-                name="certificate"
-                color="#0ab955"
-              /> */}
-            </Col>
-          </Row>
-        ))
+        <List
+          bordered
+          dataSource={lists}
+          renderItem={(item) => (
+            <List.Item>
+              <Row style={{ width: '100%' }} key={item.number} justify="space-between">
+                <Col span={15}>
+                  <div>
+                    <div className="time">
+                      <span>{item.time}</span>
+                    </div>
+                    <div className="info">
+                      <span>温度:{item.t} </span>
+                      <span>湿度:{item.rh} </span>
+                      <span>voc1:{item.voc1} </span>
+                      <span>voc2:{item.voc2} </span>
+                    </div>
+                  </div>
+                </Col>
+                <Col span={8} style={{ textAlign: 'right' }}>
+                  {alarmTypeEnums(item.alarmType)}
+                </Col>
+                <Col span={1} style={{ fontSize: '16px' }}>
+                  {/* <van-icon v-if="item.clear === 0" name="bulb-o" color="#ec0721" />
+               <van-icon
+                 v-if="item.clear === 1"
+                 name="certificate"
+                 color="#0ab955"
+               /> */}
+                </Col>
+              </Row>
+            </List.Item>
+          )}
+        />
       ) : (
         <Empty />
       )}
