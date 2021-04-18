@@ -3,6 +3,7 @@ import { Gauge } from '@ant-design/charts';
 import { Row, Col } from 'antd';
 import ProCard from '@ant-design/pro-card';
 import Logs from './logs';
+import Goods from './goods';
 import { getDeviceInfo } from '@/services/api-device';
 
 type PropsType = {
@@ -174,26 +175,31 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
             </Col>
           </Row>
         </ProCard>
-        <ProCard gutter={16} ghost style={{ height: '400px' }}>
-          <ProCard title="物品" colSpan={16} />
-          <ProCard title="报警记录" colSpan={8}>
-            <Logs id={props.id} />
-          </ProCard>
-        </ProCard>
-      </ProCard>
-
-      {/* <Row justify="center" gutter={20}>
-        <Col>
-          <span className={lightOn ? `${style.iconfontAction}` : `${style.iconfont}`}>
-            &#xe629;
+        <ProCard gutter={16} ghost style={{ height: '450px' }}>
+          <Row gutter={16}>
+            <Col span={8}>
+              {/* <Row justify="center" gutter={20}>
+                <Col>
+                  <span className={lightOn ? `${style.iconfontAction}` : `${style.iconfont}`}>
+                    &#xe629;
           </span>
           照明
         </Col>
-        <Col>
-          <span className={`${style.iconfont} ${style.iconfontFanAction}`}>&#xe620;</span>
+                <Col>
+                  <span className={`${style.iconfont} ${style.iconfontFanAction}`}>&#xe620;</span>
           风机
         </Col>
-      </Row> */}
+              </Row> */}
+            </Col>
+            <Col span={8}>
+              <Goods id={props.id}></Goods>
+            </Col>
+            <Col span={8}>
+              <Logs id={props.id} />
+            </Col>
+          </Row>
+        </ProCard>
+      </ProCard>
     </>
   );
 };

@@ -17,7 +17,7 @@ const alarmTypeEnums = function (type: number | string): string {
 };
 const LogList = (lists: DEVICE.deviceLogs[]) => {
   return (
-    <div style={{ height: '250px', overflow: 'auto' }}>
+    <div style={{ height: '300px', overflow: 'auto' }}>
       {lists.length ? (
         <List
           bordered
@@ -110,7 +110,9 @@ const DeviceLogs: React.FC<{ id: string }> = (props) => {
   }, [props.id]);
   return (
     <>
-      <ProCard loading={loading}>{LogList(loglist)}</ProCard>
+      <ProCard title="报警记录" loading={loading}>
+        {LogList(loglist)}
+      </ProCard>
     </>
   );
 };

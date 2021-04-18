@@ -16,8 +16,8 @@ const deviceList = async (params: any) => {
   await getBindDeviceList(params.current, params.pageSize, params.keyword).then((res) => {
     data = {
       success: true,
-      data: res.data.list,
-      total: res.data.total,
+      data: res.data?.list || [],
+      total: res.data?.total || 0,
     };
   });
   return data;
