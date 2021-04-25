@@ -1,21 +1,30 @@
 import React, { useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Descriptions, message } from 'antd';
+import { Radio, Card, Descriptions, message } from 'antd';
 // import type { ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { ModalForm } from '@ant-design/pro-form';
 import { getTodoList } from '@/services/api-work';
+import { getDepartmentList } from '@/services/api-department';
 
+// const { Option } = Select;
 const DepartmentAudit: React.FC = () => {
   const [updateVisible, setHandleUpdate] = useState<boolean>(false);
-  const [currentRow, setCurrentRowData] = useState<Record<string, any>>({});
-
-  const setCurrentRow = async (rowdata: Record<string, any>): Promise<void> => {
+  // const [currentRow, setCurrentRowData] = useState<Record<string, any>>({});
+  const [statusValue, changeStatus] = useState<number>(2);
+  // const [currentDep, changeDepartment] = useState<number>(2);
+  const onChangeStatus = (e: any) => {
+    changeStatus(e.target.value);
+  };
+  // const handleChangeDepartment = (value: any) => {
+  //   changeDepartment(value)
+  // }
+  // const setCurrentRow = async (rowdata: Record<string, any>): Promise<void> => {
+  const setCurrentRow = async (): Promise<void> => {
     setHandleUpdate(true);
-    setCurrentRowData(rowdata);
+    // setCurrentRowData(rowdata);
 
-    // await getDepartmentDetail(id).then((res) => {
-    // });
+    await getDepartmentList(1, 100, '');
   };
   type tableParamsType = {
     keyword: string;
@@ -33,27 +42,42 @@ const DepartmentAudit: React.FC = () => {
     await getTodoList().then((res) => {
       data = {
         success: true,
-        data: res.data.list,
+        data: res.data,
       };
     });
     return data;
   };
   const columns: Record<string, any>[] = [
     {
-      dataIndex: 'code',
-      title: '部门代码',
-    },
-    {
       dataIndex: 'name',
-      title: '部门名称',
+      title: '事件',
     },
     {
-      dataIndex: 'createdTime',
-      title: '创建时间',
+      dataIndex: 'createrAccount',
+      title: '账号',
     },
     {
-      dataIndex: 'description',
-      title: '描述',
+      dataIndex: 'createrNickName',
+      title: '申请人',
+    },
+    {
+      dataIndex: 'createDate',
+      title: '申请时间',
+    },
+    {
+      title: '审核状态',
+      dataIndex: 'status',
+      hideInForm: true,
+      valueEnum: {
+        1: {
+          text: '通过',
+          status: 'Success',
+        },
+        3: {
+          text: '拒绝',
+          status: 'Error',
+        },
+      },
     },
     {
       title: '操作',
@@ -67,7 +91,7 @@ const DepartmentAudit: React.FC = () => {
               setCurrentRow(record);
             }}
           >
-            详情
+            审核
           </a>,
         ];
       },
@@ -85,7 +109,6 @@ const DepartmentAudit: React.FC = () => {
             pagination={{
               showQuickJumper: false,
             }}
-            toolBarRender={false}
             search={false}
           />
         </Card>
@@ -93,7 +116,7 @@ const DepartmentAudit: React.FC = () => {
           name: string;
           company: string;
         }>
-          title="部门详情"
+          title="审核列表"
           visible={updateVisible}
           modalProps={{
             onCancel: () => setHandleUpdate(false),
@@ -103,14 +126,19 @@ const DepartmentAudit: React.FC = () => {
             return true;
           }}
         >
-          <Descriptions>
-            <Descriptions.Item label="机构码">{currentRow.code}</Descriptions.Item>
-            <Descriptions.Item label="机构名称">{currentRow.name}</Descriptions.Item>
-            <Descriptions.Item label="负责人">{currentRow.mgrUserName}</Descriptions.Item>
-            <Descriptions.Item label="手机号">{currentRow.mgrUserPhone}</Descriptions.Item>
-            <Descriptions.Item label="销售人员">{currentRow.saleUserId}</Descriptions.Item>
-            <Descriptions.Item label="技术支持">{currentRow.techUserName}</Descriptions.Item>
-            <Descriptions.Item label="客服人员">{currentRow.srvUserName}</Descriptions.Item>
+          <Descriptions bordered column={1}>
+            <Descriptions.Item label="审核状态">
+              <Radio.Group onChange={onChangeStatus} value={statusValue}>
+                <Radio value={2}>同意</Radio>
+                <Radio value={3}>拒绝</Radio>
+              </Radio.Group>
+            </Descriptions.Item>
+            <Descriptions.Item label="分配部门">
+              {/* <Select value={currentDep} style={{ width: 120 }} onChange={handleChangeDepartment}>
+                <Option value="jack">Jack</Option>
+
+              </Select> */}
+            </Descriptions.Item>
           </Descriptions>
         </ModalForm>
       </PageContainer>
