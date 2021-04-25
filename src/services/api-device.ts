@@ -52,9 +52,9 @@ export function lightControl(body: { deviceId: string; value: '0' | '1' }) {
  * @param {Number}  body.value    设置值，当type=0,风机运行模式，0到3分别对应自动运行、强制开启、强制关闭和时控模式.\n     当type=1,设置风机转速，整型数
  */
 export function fanControl(body: {
-  eviceId: string;
-  type: '0' | '1';
-  value: '0' | '1' | '2' | '3';
+  deviceId: string;
+  type: 0 | 1;
+  value: '0' | '1' | '2' | '3' | number;
 }) {
   return request(`${basePath}/fanctl`, { method: 'POST', data: body });
 }
