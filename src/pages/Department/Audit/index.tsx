@@ -2,27 +2,25 @@ import React, { useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Radio, Card, Descriptions, message } from 'antd';
 // import type { ProColumns } from '@ant-design/pro-table';
+import DepartmentSelect from './departmentOption';
 import ProTable from '@ant-design/pro-table';
 import { ModalForm } from '@ant-design/pro-form';
 import { getTodoList } from '@/services/api-work';
 import { getDepartmentList } from '@/services/api-department';
 
-// const { Option } = Select;
 const DepartmentAudit: React.FC = () => {
   const [updateVisible, setHandleUpdate] = useState<boolean>(false);
-  // const [currentRow, setCurrentRowData] = useState<Record<string, any>>({});
+  const [currentRow, setCurrentRowData] = useState<Record<string, any>>({});
   const [statusValue, changeStatus] = useState<number>(2);
-  // const [currentDep, changeDepartment] = useState<number>(2);
+
   const onChangeStatus = (e: any) => {
     changeStatus(e.target.value);
   };
-  // const handleChangeDepartment = (value: any) => {
-  //   changeDepartment(value)
-  // }
-  // const setCurrentRow = async (rowdata: Record<string, any>): Promise<void> => {
-  const setCurrentRow = async (): Promise<void> => {
+
+  const setCurrentRow = async (rowdata: Record<string, any>): Promise<void> => {
+    // const setCurrentRow = async (): Promise<void> => {
     setHandleUpdate(true);
-    // setCurrentRowData(rowdata);
+    setCurrentRowData(rowdata);
 
     await getDepartmentList(1, 100, '');
   };
@@ -36,8 +34,8 @@ const DepartmentAudit: React.FC = () => {
     current: 1,
     pageSize: 20,
   };
-  // const auditList = async (params: tableParamsType | any) => {
   const auditList = async () => {
+    // const auditList = async (params: tableParamsType | any) => {
     let data: any = {};
     await getTodoList().then((res) => {
       data = {
@@ -134,10 +132,7 @@ const DepartmentAudit: React.FC = () => {
               </Radio.Group>
             </Descriptions.Item>
             <Descriptions.Item label="分配部门">
-              {/* <Select value={currentDep} style={{ width: 120 }} onChange={handleChangeDepartment}>
-                <Option value="jack">Jack</Option>
-
-              </Select> */}
+              <DepartmentSelect id={currentRow.id}></DepartmentSelect>
             </Descriptions.Item>
           </Descriptions>
         </ModalForm>
