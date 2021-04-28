@@ -31,13 +31,14 @@ const handleAdd = async (fields: ORGTYPE.create) => {
 
 const organizationList = async (params: any) => {
   let data: any = {};
-  await getOrganizationList(params.keyword, params.current, params.pageSize).then((res) => {
+  const res = await getOrganizationList(params.keyword, params.current, params.pageSize);
+  if (res.code === 200) {
     data = {
       success: true,
       data: res.data.list,
       total: res.data.total,
     };
-  });
+  }
   return data;
 };
 

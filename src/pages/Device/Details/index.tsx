@@ -4,6 +4,7 @@ import { Row, Col } from 'antd';
 import ProCard from '@ant-design/pro-card';
 import Logs from './logs';
 import Goods from './goods';
+import Control from './control';
 import { getDeviceInfo } from '@/services/api-device';
 
 type PropsType = {
@@ -21,12 +22,12 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
     voc1: 0,
     voc2: 0,
   });
-  // const [lightOn, setLightStatus] = useState<boolean>(false);
+  const [lightOn, setLightStatus] = useState<0 | 1>(0);
   useEffect(() => {
     getDeviceInfo(props.id).then((e) => {
       if (e.data) {
         setItem(e.data);
-        // setLightStatus(Boolean(e.data.light));
+        setLightStatus(e.data.light);
       }
     });
   }, [props.id]);
@@ -178,18 +179,11 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
         <ProCard gutter={16} ghost style={{ height: '450px' }}>
           <Row gutter={16}>
             <Col span={8}>
-              {/* <Row justify="center" gutter={20}>
-                <Col>
-                  <span className={lightOn ? `${style.iconfontAction}` : `${style.iconfont}`}>
-                    &#xe629;
-          </span>
-          照明
-        </Col>
-                <Col>
-                  <span className={`${style.iconfont} ${style.iconfontFanAction}`}>&#xe620;</span>
-          风机
-        </Col>
-              </Row> */}
+              <Control
+                lightStatus={lightOn}
+                id={props.id}
+                fanStatus={{ funSpeed: item.funSpeed, funMode: item.funMode }}
+              ></Control>
             </Col>
             <Col span={8}>
               <Goods id={props.id}></Goods>

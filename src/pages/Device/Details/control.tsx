@@ -1,22 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Slider, Descriptions, InputNumber, Row, Col, Radio, Switch } from 'antd';
 import ProCard from '@ant-design/pro-card';
 import { lightControl, fanControl } from '@/services/api-device';
 
 type PropsType = {
-  lightStatus: boolean;
+  lightStatus: 0 | 1;
   id: string;
   fanStatus: {
     funSpeed: number;
-    funMode: number;
+    funMode: 0 | 1 | 2 | 3;
   };
 };
+let timer: any;
 const Control: React.FC<PropsType> = (props) => {
+  console.log(props);
   // const [loading, showLoad] = useState<boolean>(true);
-  const [lightStatus, setLightStatus] = useState<string>('0');
+  const [lightStatus, setLightStatus] = useState<number>(0);
   const [funSpeedValue, setFunSpeedValue] = useState<number>(0);
-  const [funModelValue, setFunModelValue] = useState<string>('0');
-  let timer: any;
+  const [funModelValue, setFunModelValue] = useState<number>(0);
+
   const onChangeModel = function (e: any) {
     if (timer) {
       clearTimeout(timer);
@@ -26,7 +28,7 @@ const Control: React.FC<PropsType> = (props) => {
       fanControl({
         deviceId: props.id,
         type: 0,
-        value: e.target.value.toString(),
+        value: e.target.value,
       }).then(() => {
         setFunModelValue(e.target.value);
       });
@@ -36,7 +38,7 @@ const Control: React.FC<PropsType> = (props) => {
     if (timer) {
       clearTimeout(timer);
     }
-    const value = e ? '1' : '0';
+    const value = e ? 1 : 0;
     setLightStatus(value);
     timer = setTimeout(() => {
       lightControl({
@@ -47,6 +49,7 @@ const Control: React.FC<PropsType> = (props) => {
       });
     }, 2000);
   };
+
   const changeFunSpeedValue = function (e: number) {
     if (timer) {
       clearTimeout(timer);
@@ -62,9 +65,11 @@ const Control: React.FC<PropsType> = (props) => {
       });
     }, 2000);
   };
-  // useEffect(() => {
-  //   showLoad(false)
-  // }, [props.lightStatus])
+  useEffect(() => {
+    setFunSpeedValue(props.fanStatus.funSpeed);
+    setFunModelValue(props.fanStatus.funMode);
+    setLightStatus(props.lightStatus);
+  }, [props.id]);
   return (
     <>
       <ProCard title="控制台" loading={false}>
@@ -78,11 +83,16 @@ const Control: React.FC<PropsType> = (props) => {
             />
           </Descriptions.Item>
           <Descriptions.Item label="风机模式">
-            <Radio.Group onChange={onChangeModel} value={funModelValue}>
-              <Radio value={'0'}>自动运行</Radio>
-              <Radio value={'1'}>强制开启</Radio>
-              <Radio value={'2'}>强制关闭</Radio>
-              <Radio value={'3'}>时控模式</Radio>
+            <Radio.Group
+              defaultValue={props.fanStatus.funMode}
+              onChange={onChangeModel}
+              value={funModelValue}
+            >
+              {props.fanStatus.funMode}
+              <Radio value={0}>自动运行</Radio>
+              <Radio value={1}>强制开启</Radio>
+              <Radio value={2}>强制关闭</Radio>
+              <Radio value={3}>时控模式</Radio>
             </Radio.Group>
           </Descriptions.Item>
           <Descriptions.Item label="风机速度">

@@ -23,8 +23,8 @@ declare namespace API {
     wxUnionid?: string;
   };
   type ResultUser = {
-    code?: number;
-    status?: string;
+    code: number;
+    status: string;
     data: CurrentUser;
     message?: string;
   };
@@ -155,7 +155,7 @@ declare namespace API {
   };
   type DevicesItem = {
     enableDebug: number;
-    funMode: number;
+    funMode: 0 | 1;
     funSpeed: number;
     isOnline: number;
     light: number;

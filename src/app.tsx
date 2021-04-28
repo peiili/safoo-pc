@@ -20,12 +20,13 @@ export const initialStateConfig = {
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser: API.CurrentUser;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  fetchUserInfo: () => Promise<API.CurrentUser>;
 }> {
-  const fetchUserInfo = async () => {
+  const fetchUserInfo = async (): Promise<API.CurrentUser> => {
     try {
       const { data } = await queryCurrentUser();
       const currentUser = data;
+
       return currentUser;
     } catch (error) {
       history.push('/user/login');
@@ -34,6 +35,7 @@ export async function getInitialState(): Promise<{
       id: '',
       organizationId: '',
       username: '',
+      roleType: 0,
     };
   };
   // 如果是登录页面，不执行

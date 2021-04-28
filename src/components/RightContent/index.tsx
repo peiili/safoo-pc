@@ -63,6 +63,8 @@ const GlobalHeaderRight: React.FC = () => {
       <Avatar menu={true} />
       {REACT_APP_ENV && (
         <span>
+          <Tag color={ENVTagColor[REACT_APP_ENV]}> 账号:{initialState.currentUser?.phone}</Tag>
+          <Tag color={ENVTagColor[REACT_APP_ENV]}> 权限:{initialState.currentUser?.roleType}</Tag>
           <Tag color={ENVTagColor[REACT_APP_ENV]}>{REACT_APP_ENV}</Tag>
         </span>
       )}

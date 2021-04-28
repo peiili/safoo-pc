@@ -30,6 +30,7 @@ const Registry: React.FC<{ showRegisterModel: boolean; setRegister: Function }> 
           onFinish={async (values) => {
             await submitRegistry(values);
             message.success('提交成功');
+            props.setRegister(false);
           }}
         >
           <ProFormText
