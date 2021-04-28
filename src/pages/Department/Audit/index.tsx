@@ -5,31 +5,38 @@ import { Radio, Card, Descriptions, message } from 'antd';
 import DepartmentSelect from './departmentOption';
 import ProTable from '@ant-design/pro-table';
 import { ModalForm } from '@ant-design/pro-form';
-import { getTodoList } from '@/services/api-work';
-import { getDepartmentList } from '@/services/api-department';
+import { auditApply, getTodoList } from '@/services/api-work';
+// import { getDepartmentList } from '@/services/api-department';
 
 const DepartmentAudit: React.FC = () => {
   const [updateVisible, setHandleUpdate] = useState<boolean>(false);
   const [currentRow, setCurrentRowData] = useState<Record<string, any>>({});
-  const [statusValue, changeStatus] = useState<number>(2);
+  const [statusValue, changeStatus] = useState<2 | 3>(2);
+  const [distributionDep, setDistributionDep] = useState<string>('');
 
   const onChangeStatus = (e: any) => {
     changeStatus(e.target.value);
   };
 
-  const setCurrentRow = async (rowdata: Record<string, any>): Promise<void> => {
+  const distributionTo = (data: string) => {
+    setDistributionDep(data);
+  };
+  const setCurrentRow = async (rowData: Record<string, any>): Promise<void> => {
     // const setCurrentRow = async (): Promise<void> => {
     setHandleUpdate(true);
-    setCurrentRowData(rowdata);
-
-    await getDepartmentList(1, 100, '');
+    setCurrentRowData(rowData);
+    // await getDepartmentList(1, 100, '');
   };
-  type tableParamsType = {
-    keyword: string;
-    current: number;
-    pageSize: number;
+  const applyAudit = () => {
+    return auditApply({
+      cause: '',
+      departmentId: distributionDep,
+      endTime: '',
+      flowItemId: currentRow.id,
+      status: statusValue,
+    });
   };
-  const tableParams: tableParamsType = {
+  const tableParams: DepType.tableParamsType = {
     keyword: '',
     current: 1,
     pageSize: 20,
@@ -68,6 +75,10 @@ const DepartmentAudit: React.FC = () => {
       hideInForm: true,
       valueEnum: {
         1: {
+          text: '待审核',
+          status: 'Processing',
+        },
+        2: {
           text: '通过',
           status: 'Success',
         },
@@ -81,7 +92,7 @@ const DepartmentAudit: React.FC = () => {
       title: '操作',
       dataIndex: '',
       valueType: 'option',
-      render: (record: Record<string, any>) => {
+      render: (_: any, record: Record<string, any>) => {
         return [
           <a
             key="edit"
@@ -120,7 +131,9 @@ const DepartmentAudit: React.FC = () => {
             onCancel: () => setHandleUpdate(false),
           }}
           onFinish={async () => {
+            await applyAudit();
             message.success('提交成功');
+            setHandleUpdate(false);
             return true;
           }}
         >
@@ -132,7 +145,10 @@ const DepartmentAudit: React.FC = () => {
               </Radio.Group>
             </Descriptions.Item>
             <Descriptions.Item label="分配部门">
-              <DepartmentSelect id={currentRow.id}></DepartmentSelect>
+              <DepartmentSelect
+                id={currentRow.id}
+                cb={(value: string) => distributionTo(value)}
+              ></DepartmentSelect>
             </Descriptions.Item>
           </Descriptions>
         </ModalForm>

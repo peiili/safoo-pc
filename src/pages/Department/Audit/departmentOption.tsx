@@ -4,11 +4,12 @@ import { getDepartmentList } from '@/services/api-department';
 
 const { Option } = Select;
 
-const DepartmentSelect: React.FC<{ id: string }> = (props) => {
+const DepartmentSelect: React.FC<{ id: string; cb: Function }> = (props) => {
   const [currentDep, changeDepartment] = useState<string>('');
   const [depList, setDepList] = useState<Record<string, any>[]>([]);
   const handleChangeDepartment = (value: any) => {
     changeDepartment(value);
+    props.cb(value.toString());
   };
   const getOptions = async () => {
     const res = await getDepartmentList(1);
@@ -25,6 +26,7 @@ const DepartmentSelect: React.FC<{ id: string }> = (props) => {
       value={currentDep}
       style={{ width: 120 }}
       onChange={(str) => handleChangeDepartment(str)}
+      placeholder="请选择要分配的部门"
     >
       {depList.map((e) => (
         <Option key={e.id} value={e.id}>

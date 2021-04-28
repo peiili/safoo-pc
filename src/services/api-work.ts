@@ -15,7 +15,7 @@ type auditApplyType = {
   departmentId: string;
   endTime: string;
   flowItemId: string;
-  status: '2' | '3';
+  status: 2 | 3;
 };
 export function auditApply(body: auditApplyType) {
   return request(`${basePath}/dispose`, { method: 'POST', data: body });
