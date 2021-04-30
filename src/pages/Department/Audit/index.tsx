@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Radio, Card, Descriptions, message } from 'antd';
+import { Radio, Card, Descriptions, Input, message } from 'antd';
 // import type { ProColumns } from '@ant-design/pro-table';
 import DepartmentSelect from './departmentOption';
 import ProTable from '@ant-design/pro-table';
@@ -8,12 +8,17 @@ import { ModalForm } from '@ant-design/pro-form';
 import { auditApply, getTodoList } from '@/services/api-work';
 // import { getDepartmentList } from '@/services/api-department';
 
+const { TextArea } = Input;
 const DepartmentAudit: React.FC = () => {
   const [updateVisible, setHandleUpdate] = useState<boolean>(false);
   const [currentRow, setCurrentRowData] = useState<Record<string, any>>({});
   const [statusValue, changeStatus] = useState<2 | 3>(2);
   const [distributionDep, setDistributionDep] = useState<string>('');
+  const [rejectCause, onSetCause] = useState<string>('');
 
+  const onChangeCause = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onSetCause(e.target.value);
+  };
   const onChangeStatus = (e: any) => {
     changeStatus(e.target.value);
   };
@@ -22,15 +27,13 @@ const DepartmentAudit: React.FC = () => {
     setDistributionDep(data);
   };
   const setCurrentRow = async (rowData: Record<string, any>): Promise<void> => {
-    // const setCurrentRow = async (): Promise<void> => {
     setHandleUpdate(true);
     setCurrentRowData(rowData);
-    // await getDepartmentList(1, 100, '');
   };
   const applyAudit = () => {
     return auditApply({
-      cause: '',
-      departmentId: distributionDep,
+      cause: statusValue === 3 ? rejectCause : '',
+      departmentId: statusValue === 2 ? distributionDep : '',
       endTime: '',
       flowItemId: currentRow.id,
       status: statusValue,
@@ -145,10 +148,14 @@ const DepartmentAudit: React.FC = () => {
               </Radio.Group>
             </Descriptions.Item>
             <Descriptions.Item label="分配部门">
-              <DepartmentSelect
-                id={currentRow.id}
-                cb={(value: string) => distributionTo(value)}
-              ></DepartmentSelect>
+              {statusValue === 2 ? (
+                <DepartmentSelect
+                  id={currentRow.id}
+                  cb={(value: string) => distributionTo(value)}
+                ></DepartmentSelect>
+              ) : (
+                <TextArea rows={4} onChange={(data) => onChangeCause(data)} value={rejectCause} />
+              )}
             </Descriptions.Item>
           </Descriptions>
         </ModalForm>
