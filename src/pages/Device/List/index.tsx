@@ -1,13 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { getBindDeviceList } from '@/services/api-device';
-import { Button, Card, message } from 'antd';
+import { Button, Card, message, Popconfirm } from 'antd';
 import ProTable from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { ModalForm, ProFormText } from '@ant-design/pro-form';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'umi';
-import { bindDevice } from '@/services/api-device';
+import { bindDevice, unBindDevice } from '@/services/api-device';
 import Details from './../Details/index';
 
 // 获取绑定列表
@@ -45,7 +45,11 @@ const Devices: React.FC = () => {
   const setCurrentRow = async (id: string) => {
     await setCurrentRowId(id);
   };
-
+  const onUnBindDevice = async (id: string) => {
+    const res = await unBindDevice(id);
+    return res.code === 200;
+  };
+  const cancel = (): void => {};
   const columns: ProColumns<API.DevicesList>[] = [
     {
       dataIndex: 'deviceId',
@@ -96,6 +100,25 @@ const Devices: React.FC = () => {
           >
             详情
           </a>,
+          <Popconfirm
+            title="是否删除此设备"
+            onConfirm={async () => {
+              const success = await onUnBindDevice(record.deviceId);
+              if (success) {
+                if (actionRef.current) {
+                  actionRef.current.reload();
+                }
+              }
+            }}
+            onCancel={cancel}
+            okText="是"
+            cancelText="否"
+            key="del"
+          >
+            <a href="#" style={{ color: 'red' }}>
+              删除
+            </a>
+          </Popconfirm>,
         ];
       },
     },

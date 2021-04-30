@@ -12,7 +12,9 @@ const Goods: React.FC<{ id: string }> = (props) => {
   const [loading, showLoad] = useState<boolean>(true);
   useEffect(() => {
     getDeviceStockInfo(props.id).then((res) => {
-      setGoodsList(res.data);
+      if (res.code === 200 && res.data) {
+        setGoodsList(res.data);
+      }
       showLoad(false);
     });
   }, [props.id]);
@@ -20,7 +22,7 @@ const Goods: React.FC<{ id: string }> = (props) => {
   return (
     <>
       <ProCard title="物品" loading={loading}>
-        <div style={{ height: '300px', overflow: 'auto' }}>
+        <div style={{ height: '400px', overflow: 'auto' }}>
           {lists.length ? (
             <List<list>
               bordered

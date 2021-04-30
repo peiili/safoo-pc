@@ -3,7 +3,7 @@ import ProCard from '@ant-design/pro-card';
 import { getDeviceLog } from '@/services/api-device';
 import { Empty, List, Row, Col } from 'antd';
 
-const alarmTypeEnums = function (type: number | string): string {
+const alarmTypeEnums = (type: number | string): string => {
   const enums = {
     0: '温度过高',
     1: '温度过低',
@@ -17,7 +17,7 @@ const alarmTypeEnums = function (type: number | string): string {
 };
 const LogList = (lists: DEVICE.deviceLogs[]) => {
   return (
-    <div style={{ height: '300px', overflow: 'auto' }}>
+    <div style={{ height: '400px', overflow: 'auto' }}>
       {lists.length ? (
         <List
           bordered

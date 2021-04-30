@@ -23,10 +23,12 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
     voc2: 0,
   });
   const [lightOn, setLightStatus] = useState<0 | 1>(0);
+  const [deviceName, setDeviceName] = useState<string>('');
   useEffect(() => {
     getDeviceInfo(props.id).then((e) => {
       if (e.data) {
         setItem(e.data);
+        setDeviceName(e.data.name);
         setLightStatus(e.data.light);
       }
     });
@@ -176,10 +178,11 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
             </Col>
           </Row>
         </ProCard>
-        <ProCard gutter={16} ghost style={{ height: '450px' }}>
+        <ProCard gutter={16} ghost>
           <Row gutter={16}>
             <Col span={8}>
               <Control
+                name={deviceName}
                 lightStatus={lightOn}
                 id={props.id}
                 fanStatus={{ funSpeed: item.funSpeed, funMode: item.funMode }}
