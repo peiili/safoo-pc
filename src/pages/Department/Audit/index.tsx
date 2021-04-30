@@ -16,6 +16,11 @@ const DepartmentAudit: React.FC = () => {
   const [distributionDep, setDistributionDep] = useState<string>('');
   const [rejectCause, onSetCause] = useState<string>('');
 
+  const initAuditData = function () {
+    changeStatus(2);
+    setDistributionDep('');
+    onSetCause('');
+  };
   const onChangeCause = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onSetCause(e.target.value);
   };
@@ -137,6 +142,7 @@ const DepartmentAudit: React.FC = () => {
             await applyAudit();
             message.success('提交成功');
             setHandleUpdate(false);
+            initAuditData();
             return true;
           }}
         >
