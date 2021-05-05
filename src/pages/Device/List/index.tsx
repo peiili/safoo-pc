@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { getBindDeviceList } from '@/services/api-device';
-import { Button, Card, message, Popconfirm } from 'antd';
+import { Button, Card, message, Popconfirm, Tooltip } from 'antd';
 import ProTable from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
@@ -8,6 +8,7 @@ import { ModalForm, ProFormText } from '@ant-design/pro-form';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'umi';
 import { bindDevice, unBindDevice } from '@/services/api-device';
+import { requestDeviceOp } from '@/services/api-user';
 import Details from './../Details/index';
 
 // 获取绑定列表
@@ -50,6 +51,41 @@ const Devices: React.FC = () => {
     return res.code === 200;
   };
   const cancel = (): void => {};
+  const ctls = (record: any) => {
+    let ele;
+    if (record.isOnline === 1 && record.enableCtl === 1) {
+      ele = (
+        <a
+          onClick={async () => {
+            setHandleUpdate(true);
+            setCurrentRow(record.deviceId);
+          }}
+        >
+          详情
+        </a>
+      );
+    } else if (record.isOnline === 1) {
+      ele = (
+        <Tooltip placement="topRight" title="设备已离线">
+          <a style={{ color: '#ccc' }}>详情</a>
+        </Tooltip>
+      );
+    } else {
+      ele = (
+        <Popconfirm
+          title="权限不足，是否申请操作权限"
+          onConfirm={async () => {
+            // 申请操作设备
+            const res = await requestDeviceOp(record.deviceId);
+            if (res.code === 200) message.success(res.data);
+          }}
+        >
+          <a href="#">详情</a>
+        </Popconfirm>
+      );
+    }
+    return ele;
+  };
   const columns: ProColumns<API.DevicesList>[] = [
     {
       dataIndex: 'deviceId',
@@ -88,18 +124,7 @@ const Devices: React.FC = () => {
       valueType: 'option',
       render: (_, record) => {
         return [
-          <a
-            key="edit"
-            onClick={async () => {
-              if (record.isOnline) {
-                setHandleUpdate(true);
-                setCurrentRow(record.deviceId);
-              }
-            }}
-            style={{ color: record.isOnline ? '' : '#ccc' }}
-          >
-            详情
-          </a>,
+          <div key="edit">{ctls(record)}</div>,
           <Popconfirm
             title="是否删除此设备"
             onConfirm={async () => {

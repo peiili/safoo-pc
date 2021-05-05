@@ -29,3 +29,10 @@ export function updatePassword(body: LOGIN.rePassword) {
     { method: 'POST' }
   );
 }
+/**
+ * 普通用户申请操作设备权限
+ * @param {String} deviceId  需要申请权限的设备
+ */
+export function requestDeviceOp(deviceId: string) {
+  return request(`${basePath}/requestDeviceOp?deviceId=${deviceId}`, { method: 'POST' });
+}
