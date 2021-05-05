@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Radio, Card, Descriptions, Input, message } from 'antd';
-// import type { ProColumns } from '@ant-design/pro-table';
+import { Radio, Card, Descriptions, Form, Input, message } from 'antd';
+import type { ActionType } from '@ant-design/pro-table';
 import DepartmentSelect from './departmentOption';
 import ProTable from '@ant-design/pro-table';
-import { ModalForm } from '@ant-design/pro-form';
+import { ModalForm, ProFormDateTimePicker } from '@ant-design/pro-form';
 import { auditApply, getTodoList } from '@/services/api-work';
+import moment from 'moment';
 // import { getDepartmentList } from '@/services/api-department';
 
 const { TextArea } = Input;
@@ -15,15 +16,16 @@ const DepartmentAudit: React.FC = () => {
   const [statusValue, changeStatus] = useState<2 | 3>(2);
   const [distributionDep, setDistributionDep] = useState<string>('');
   const [rejectCause, onSetCause] = useState<string>('');
+  const actionRef = useRef<ActionType>();
 
   const initAuditData = function () {
     changeStatus(2);
     setDistributionDep('');
     onSetCause('');
   };
-  const onChangeCause = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onSetCause(e.target.value);
-  };
+  // const onChangeCause = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  //   onSetCause(e.target.value);
+  // };
   const onChangeStatus = (e: any) => {
     changeStatus(e.target.value);
   };
@@ -35,11 +37,14 @@ const DepartmentAudit: React.FC = () => {
     setHandleUpdate(true);
     setCurrentRowData(rowData);
   };
-  const applyAudit = () => {
+  const applyAudit = (values: Record<string, any>) => {
     return auditApply({
-      cause: statusValue === 3 ? rejectCause : '',
-      departmentId: statusValue === 2 ? distributionDep : '',
-      endTime: '',
+      cause: statusValue === 3 ? values.rejectCause : '',
+      departmentId: statusValue === 2 && currentRow.type === 1 ? distributionDep : '',
+      endTime:
+        statusValue === 2 && currentRow.type === 2
+          ? moment(values.endTime).format('YYYY-MM-DD HH:mm:ss')
+          : '',
       flowItemId: currentRow.id,
       status: statusValue,
     });
@@ -119,6 +124,7 @@ const DepartmentAudit: React.FC = () => {
       <PageContainer>
         <Card>
           <ProTable<API.OrganizationDetails>
+            actionRef={actionRef}
             columns={columns}
             request={auditList}
             rowKey="id"
@@ -130,39 +136,68 @@ const DepartmentAudit: React.FC = () => {
           />
         </Card>
         <ModalForm<{
-          name: string;
-          company: string;
+          endTime: number;
+          status: number;
+          rejectCause: string;
+          departmentId: string;
         }>
+          initialValues={{
+            endTime: Date.now() + 1000 * 60 * 10,
+            status: statusValue,
+            rejectCause,
+            departmentId: '',
+          }}
           title="审核列表"
           visible={updateVisible}
           modalProps={{
             onCancel: () => setHandleUpdate(false),
           }}
-          onFinish={async () => {
-            await applyAudit();
+          onFinish={async (values: any) => {
+            await applyAudit(values);
             message.success('提交成功');
             setHandleUpdate(false);
             initAuditData();
+            if (actionRef.current) {
+              actionRef.current.reload();
+            }
             return true;
           }}
         >
           <Descriptions bordered column={1}>
             <Descriptions.Item label="审核状态">
-              <Radio.Group onChange={onChangeStatus} value={statusValue}>
-                <Radio value={2}>同意</Radio>
-                <Radio value={3}>拒绝</Radio>
-              </Radio.Group>
+              <Form.Item name="status">
+                <Radio.Group onChange={onChangeStatus} value={statusValue}>
+                  <Radio value={2}>同意</Radio>
+                  <Radio value={3}>拒绝</Radio>
+                </Radio.Group>
+              </Form.Item>
             </Descriptions.Item>
-            <Descriptions.Item label="分配部门">
-              {statusValue === 2 ? (
-                <DepartmentSelect
-                  id={currentRow.id}
-                  cb={(value: string) => distributionTo(value)}
-                ></DepartmentSelect>
-              ) : (
-                <TextArea rows={4} onChange={(data) => onChangeCause(data)} value={rejectCause} />
-              )}
-            </Descriptions.Item>
+            {currentRow.type === 1 ? (
+              <Descriptions.Item label="分配部门">
+                {statusValue === 2 ? (
+                  <Form.Item name="departmentId">
+                    <DepartmentSelect
+                      id={currentRow.id}
+                      cb={(value: string) => distributionTo(value)}
+                    ></DepartmentSelect>
+                  </Form.Item>
+                ) : (
+                  <Form.Item name="rejectCause">
+                    <TextArea rows={4} />
+                  </Form.Item>
+                )}
+              </Descriptions.Item>
+            ) : (
+              <Descriptions.Item label="控制有效期">
+                {statusValue === 2 ? (
+                  <ProFormDateTimePicker name="endTime" />
+                ) : (
+                  <Form.Item name="rejectCause">
+                    <TextArea rows={4} />
+                  </Form.Item>
+                )}
+              </Descriptions.Item>
+            )}
           </Descriptions>
         </ModalForm>
       </PageContainer>
