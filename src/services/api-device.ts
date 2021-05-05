@@ -65,8 +65,17 @@ export function getDeviceInfo(deviceId: string) {
  * 获取设备状态日志
  * @param {String} deviceId
  */
-export function getDeviceLog(deviceId: string) {
-  return request(`${basePath}/alerthistory/${deviceId}`, { method: 'GET' });
+export function getDeviceLog(
+  deviceId: string,
+  page: {
+    pageNum: number;
+    pageSize: number;
+  }
+) {
+  return request(
+    `${basePath}/alerthistory/${deviceId}?pageNum=${page.pageNum}&pageSize=${page.pageSize}`,
+    { method: 'GET' }
+  );
 }
 /**
  * 获取设备中存放的物品

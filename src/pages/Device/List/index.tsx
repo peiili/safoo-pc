@@ -64,7 +64,7 @@ const Devices: React.FC = () => {
           详情
         </a>
       );
-    } else if (record.isOnline === 1) {
+    } else if (record.isOnline === 0) {
       ele = (
         <Tooltip placement="topRight" title="设备已离线">
           <a style={{ color: '#ccc' }}>详情</a>

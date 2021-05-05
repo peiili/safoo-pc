@@ -7,16 +7,14 @@ import Production from './components/Production/index';
 import { useIntl } from 'umi';
 
 const { TabPane } = Tabs;
-function callback(key: string) {
-  console.log(key);
-}
+
 const Service: React.FC = () => {
   const intl = useIntl();
   return (
     <>
       <PageContainer>
         <Card>
-          <Tabs defaultActiveKey="production" onChange={callback}>
+          <Tabs defaultActiveKey="production">
             <TabPane
               tab={intl.formatMessage({
                 id: 'pages.service.production',
