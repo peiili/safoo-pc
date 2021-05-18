@@ -35,7 +35,7 @@ const departmentList = async (params: DepType.tableParamsType | any) => {
   await getDepartmentList(params.current, params.pageSize, params.keyword).then((res) => {
     data = {
       success: true,
-      data: res.data.list,
+      data: res.data?.list || [],
       total: res.data.total,
     };
   });

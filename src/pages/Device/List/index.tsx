@@ -153,7 +153,12 @@ const Devices: React.FC = () => {
             />
           </Card>
         ) : (
-          <Details id={currentId} />
+          <Details
+            back={() => {
+              setHandleUpdate(false);
+            }}
+            id={currentId}
+          />
         )}
       </PageContainer>
       <ModalForm<DEVICE.bindDevice>

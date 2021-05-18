@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Gauge } from '@ant-design/charts';
-import { Row, Col } from 'antd';
+import { Row, Col, Button } from 'antd';
 import ProCard from '@ant-design/pro-card';
 import Logs from './logs';
 import Goods from './goods';
@@ -9,6 +9,7 @@ import { getDeviceInfo } from '@/services/api-device';
 
 type PropsType = {
   id: string;
+  back: Function;
 };
 const DeviceDetails: React.FC<PropsType> = (props) => {
   const [item, setItem] = useState<API.DevicesItem>({
@@ -24,7 +25,12 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
   });
   const [lightOn, setLightStatus] = useState<0 | 1>(0);
   const [deviceName, setDeviceName] = useState<string>('');
-  useEffect(() => {
+  let timer: any;
+  const goBack = function () {
+    clearTimeout(timer);
+    props.back();
+  };
+  const getInfo = function () {
     getDeviceInfo(props.id).then((e) => {
       if (e.data) {
         setItem(e.data);
@@ -32,7 +38,16 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
         setLightStatus(e.data.light);
       }
     });
+  };
+  useEffect(() => {
+    timer = setTimeout(() => {
+      getInfo();
+    }, 5000);
+  }, []);
+  useEffect(() => {
+    getInfo();
   }, [props.id]);
+
   const VOC1_config = {
     axis: {
       label: {
@@ -163,6 +178,7 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
     <>
       <ProCard direction="column" ghost gutter={[0, 16]}>
         <ProCard>
+          <Button onClick={goBack}>返回列表</Button>
           <Row gutter={20}>
             <Col>
               <Gauge {...VOC1_config} />

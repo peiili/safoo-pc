@@ -11,6 +11,8 @@ import {
   Col,
   Radio,
   Switch,
+  Skeleton,
+  Space,
 } from 'antd';
 import ProCard from '@ant-design/pro-card';
 import { lightControl, fanControl, renameDevice } from '@/services/api-device';
@@ -33,6 +35,7 @@ const Control: React.FC<PropsType> = (props) => {
   const [funSpeedValue, setFunSpeedValue] = useState<number>(0);
   const [funModelValue, setFunModelValue] = useState<number>(0);
   const [deviceName, setDeviceName] = useState<string>('');
+  const [loadStatus, setLoadStatus] = useState<boolean>(true);
 
   const onChangeDeviceName = function (e: Record<string, any>) {
     setDeviceName(e.target.value);
@@ -107,75 +110,106 @@ const Control: React.FC<PropsType> = (props) => {
     setFunSpeedValue(props.fanStatus.funSpeed);
     setFunModelValue(props.fanStatus.funMode);
     setLightStatus(props.lightStatus);
-  }, [props.id]);
+    setDeviceName(props.name);
+    if (props.name) {
+      setLoadStatus(false);
+    }
+  }, [props.id, props.fanStatus.funSpeed, props.fanStatus.funMode, props.lightStatus, props.name]);
   return (
     <>
       <ProCard title="控制台" loading={false}>
-        <div style={{ height: '400px', overflow: 'auto' }}>
-          <Descriptions bordered column={1}>
-            <Descriptions.Item label="照明">
-              <Switch
-                checkedChildren="开启"
-                unCheckedChildren="关闭"
-                checked={Boolean(lightStatus)}
-                onChange={onChangeLight}
-              />
-            </Descriptions.Item>
-            <Descriptions.Item label="风机模式">
-              <Radio.Group
-                defaultValue={props.fanStatus.funMode}
-                onChange={onChangeModel}
-                value={funModelValue}
-              >
-                {props.fanStatus.funMode}
-                <Radio value={0}>自动运行</Radio>
-                <Radio value={1}>强制开启</Radio>
-                <Radio value={2}>强制关闭</Radio>
-                <Radio value={3}>时控模式</Radio>
-              </Radio.Group>
-            </Descriptions.Item>
-            <Descriptions.Item label="风机速度">
-              <Row>
-                <Col span={12}>
-                  <Slider
-                    min={0}
-                    max={3000}
-                    onChange={changeFunSpeedValue}
-                    value={typeof funSpeedValue === 'number' ? funSpeedValue : 0}
-                  />
-                </Col>
-                <Col span={4}>
-                  <InputNumber
-                    min={0}
-                    max={3000}
-                    style={{ margin: '0 16px' }}
-                    value={funSpeedValue}
-                    onChange={changeFunSpeedValue}
-                  />
-                </Col>
-              </Row>
-            </Descriptions.Item>
-            {[4].includes(currentUser?.roleType || 0) && (
-              <Descriptions.Item label="重命名">
+        {loadStatus ? (
+          <div>
+            <Space>
+              <Skeleton.Avatar />
+              <Skeleton.Button />
+              <Skeleton.Button />
+              <Skeleton.Avatar />
+              <Skeleton.Input style={{ width: 200 }} />
+            </Space>
+            <Space>
+              <Skeleton.Avatar />
+              <Skeleton.Button />
+              <Skeleton.Button />
+              <Skeleton.Avatar />
+              <Skeleton.Input style={{ width: 200 }} />
+            </Space>
+            <Space>
+              <Skeleton.Avatar />
+              <Skeleton.Input style={{ width: 200 }} />
+            </Space>
+            <Space>
+              <Skeleton.Avatar />
+              <Skeleton.Input style={{ width: 400 }} />
+            </Space>
+          </div>
+        ) : (
+          <div style={{ height: '400px', overflow: 'auto' }}>
+            <Descriptions bordered column={1}>
+              <Descriptions.Item label="照明">
+                <Switch
+                  checkedChildren="开启"
+                  unCheckedChildren="关闭"
+                  checked={Boolean(lightStatus)}
+                  onChange={onChangeLight}
+                />
+              </Descriptions.Item>
+              <Descriptions.Item label="风机模式">
+                <Radio.Group
+                  defaultValue={props.fanStatus.funMode}
+                  onChange={onChangeModel}
+                  value={funModelValue}
+                >
+                  {props.fanStatus.funMode}
+                  <Radio value={0}>自动运行</Radio>
+                  <Radio value={1}>强制开启</Radio>
+                  <Radio value={2}>强制关闭</Radio>
+                  <Radio value={3}>时控模式</Radio>
+                </Radio.Group>
+              </Descriptions.Item>
+              <Descriptions.Item label="风机速度">
                 <Row>
                   <Col span={12}>
-                    <Input value={deviceName} maxLength={50} onChange={onChangeDeviceName} />
+                    <Slider
+                      min={0}
+                      max={3000}
+                      onChange={changeFunSpeedValue}
+                      value={typeof funSpeedValue === 'number' ? funSpeedValue : 0}
+                    />
                   </Col>
                   <Col span={4}>
-                    <Button style={{ color: '#1890ff' }} type="text" onClick={submitChange}>
-                      确定
-                    </Button>
-                  </Col>
-                  <Col span={4}>
-                    <Button type="text" onClick={() => setDeviceName(props.name)}>
-                      取消
-                    </Button>
+                    <InputNumber
+                      min={0}
+                      max={3000}
+                      style={{ margin: '0 16px' }}
+                      value={funSpeedValue}
+                      onChange={changeFunSpeedValue}
+                    />
                   </Col>
                 </Row>
               </Descriptions.Item>
-            )}
-          </Descriptions>
-        </div>
+              {[4].includes(currentUser?.roleType || 0) && (
+                <Descriptions.Item label="重命名">
+                  <Row>
+                    <Col span={12}>
+                      <Input value={deviceName} maxLength={50} onChange={onChangeDeviceName} />
+                    </Col>
+                    <Col span={4}>
+                      <Button style={{ color: '#1890ff' }} type="text" onClick={submitChange}>
+                        确定
+                      </Button>
+                    </Col>
+                    <Col span={4}>
+                      <Button type="text" onClick={() => setDeviceName(props.name)}>
+                        取消
+                      </Button>
+                    </Col>
+                  </Row>
+                </Descriptions.Item>
+              )}
+            </Descriptions>
+          </div>
+        )}
       </ProCard>
     </>
   );
