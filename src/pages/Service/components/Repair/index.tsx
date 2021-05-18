@@ -4,37 +4,10 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { useIntl, FormattedMessage } from 'umi';
 import { getMaintainList, maintainInput } from '@/services/api-support';
-import { Button, Descriptions, Form, message } from 'antd';
+import { Button, Form, message } from 'antd';
 import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
+import Details from '@/pages/Device/Details/index';
 
-function DetailsModal(props: { details: Record<string, any> }) {
-  const column: Record<string, any>[] = [
-    { label: '设备名称', key: 'deviceName' },
-    { label: '设备地址', key: 'orgAddress' },
-    { label: '安装时间', key: 'setupTime' },
-    { label: '机构地址', key: 'orgAddress' },
-    { label: '机构码', key: 'orgMgrId' },
-    { label: '机构名称', key: 'orgName' },
-    { label: '机构管理员', key: 'orgMgrNickName' },
-    { label: '联系方式', key: 'orgMgrPhone' },
-    { label: '技术支持', key: 'techNickName' },
-    { label: '技术支持电话', key: 'techUserPhone' },
-  ];
-  const ele = column.map((e) => {
-    return (
-      <Descriptions.Item key={e.key} label={e.label}>
-        {props.details[e.key]}
-      </Descriptions.Item>
-    );
-  });
-  return (
-    <>
-      <Descriptions bordered column={2}>
-        {ele}
-      </Descriptions>
-    </>
-  );
-}
 type FormType = {
   deviceId: string;
   description: string;
@@ -120,16 +93,7 @@ const Repair: React.FC = () => {
               setCurrentRow(record);
             }}
           >
-            详情
-          </a>,
-          <a
-            key="edit"
-            onClick={() => {
-              // setHandleUpdate();
-              // setCurrentRow(record);
-            }}
-          >
-            控制设备
+            查看设备
           </a>,
         ];
       },
@@ -158,12 +122,13 @@ const Repair: React.FC = () => {
         ]}
         search={false}
       />
-      <ModalForm<{
-        name: string;
-        company: string;
-      }>
+      <ModalForm
         title="安装详情"
         visible={showDetails}
+        width={window.innerWidth / 1.5}
+        modalProps={{
+          onCancel: () => false,
+        }}
         submitter={{
           render: () => {
             return [
@@ -178,7 +143,9 @@ const Repair: React.FC = () => {
           },
         }}
       >
-        <DetailsModal details={currentRow} />
+        <div style={{ background: '#eef0f4' }}>
+          <Details id={currentRow.deviceId} readonly={true} />
+        </div>
       </ModalForm>
       <ModalForm<FormType>
         title={intl.formatMessage({

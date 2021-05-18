@@ -10,6 +10,7 @@ import { getDeviceInfo } from '@/services/api-device';
 type PropsType = {
   id: string;
   back: Function;
+  readonly?: boolean;
 };
 const DeviceDetails: React.FC<PropsType> = (props) => {
   const [item, setItem] = useState<API.DevicesItem>({
@@ -196,18 +197,20 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
         </ProCard>
         <ProCard gutter={16} ghost>
           <Row gutter={16}>
-            <Col span={8}>
-              <Control
-                name={deviceName}
-                lightStatus={lightOn}
-                id={props.id}
-                fanStatus={{ funSpeed: item.funSpeed, funMode: item.funMode }}
-              ></Control>
-            </Col>
-            <Col span={8}>
+            {!props.readonly && (
+              <Col span={8}>
+                <Control
+                  name={deviceName}
+                  lightStatus={lightOn}
+                  id={props.id}
+                  fanStatus={{ funSpeed: item.funSpeed, funMode: item.funMode }}
+                ></Control>
+              </Col>
+            )}
+            <Col span={props.readonly ? 12 : 8}>
               <Goods id={props.id}></Goods>
             </Col>
-            <Col span={8}>
+            <Col span={props.readonly ? 12 : 8}>
               <Logs id={props.id} />
             </Col>
           </Row>
