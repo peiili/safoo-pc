@@ -9,7 +9,7 @@ import { getDeviceInfo } from '@/services/api-device';
 
 type PropsType = {
   id: string;
-  back: Function;
+  back: () => void;
   readonly?: boolean;
 };
 const DeviceDetails: React.FC<PropsType> = (props) => {
@@ -27,11 +27,11 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
   const [lightOn, setLightStatus] = useState<0 | 1>(0);
   const [deviceName, setDeviceName] = useState<string>('');
   let timer: any;
-  const goBack = function () {
-    clearTimeout(timer);
+  const goBack = () => {
+    clearInterval(timer);
     props.back();
   };
-  const getInfo = function () {
+  const getInfo = () => {
     getDeviceInfo(props.id).then((e) => {
       if (e.data) {
         setItem(e.data);
@@ -40,10 +40,15 @@ const DeviceDetails: React.FC<PropsType> = (props) => {
       }
     });
   };
+  const componentWillUnmount = () => {
+    // 组件销毁时你要执行的代码
+    clearInterval(timer);
+  };
   useEffect(() => {
-    timer = setTimeout(() => {
+    timer = setInterval(() => {
       getInfo();
     }, 5000);
+    return componentWillUnmount;
   }, []);
   useEffect(() => {
     getInfo();
