@@ -57,6 +57,7 @@ export default {
   'menu.editor.koni': '拓扑编辑器',
   'menu.organization.list': '用户机构',
   'menu.department.list': '部门列表',
+  'menu.download': '资料下载',
   'menu.department.audit': '审核',
   'menu.device.list': '设备列表',
 };

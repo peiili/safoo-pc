@@ -108,6 +108,12 @@
     component: './Account/center.tsx',
   },
   {
+    path: '/download',
+    name: 'download',
+    icon: 'CloudDownloadOutlined',
+    component: './Download/index.tsx',
+  },
+  {
     component: './404',
   },
 ];
