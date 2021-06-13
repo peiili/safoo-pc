@@ -4,23 +4,13 @@ import { getFileList, uploadFile, deleteFile } from '@/services/api-file';
 import ProTable from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProForm, {
-  ModalForm,
-  ProFormText,
-  ProFormSelect,
-  ProFormUploadButton,
-} from '@ant-design/pro-form';
+import type { FormInstance } from '@ant-design/pro-form';
+import ProForm, { ModalForm, ProFormSelect, ProFormUploadButton } from '@ant-design/pro-form';
 import { Button, Card, message } from 'antd';
-// import { useModel } from 'umi';
-// const { initialState } = useModel('@@initialState');
-// const { currentUser } = initialState || {};
 
 const Download: React.FC = () => {
-  // const { initialState } = useModel('@@initialState');
-  // const { currentUser } = initialState || {};
-  // console.log(currentUser);
-  // const actionRef = useRef<ActionType>();
   const actionRef = useRef<ActionType>();
+  const formRef = useRef<FormInstance>();
   type fileBasic = {
     id: string;
     dataIndex: string;
@@ -35,8 +25,7 @@ const Download: React.FC = () => {
   let fileData: any;
   const onChangeFile = (file: any) => {
     if (file.file.status === 'done') {
-      fileData = file.file;
-      console.log('上传完成');
+      fileData = file.file.originFileObj;
     }
   };
 
@@ -47,6 +36,7 @@ const Download: React.FC = () => {
         type: number;
         upload: any;
       }>
+        formRef={formRef}
         initialValues={{
           type: 0,
         }}
@@ -58,25 +48,28 @@ const Download: React.FC = () => {
           </Button>
         }
         modalProps={{
-          onCancel: () => console.log('run'),
+          onCancel: () => formRef.current?.resetFields(),
         }}
         onFinish={async (values) => {
-          const { type } = values;
-          const files = values.upload[0];
-          if (values.name) {
-            files.name = values.name;
+          if (!fileData) {
+            message.warning('请等待文件上传完成');
+            return false;
           }
+          const { type } = values;
           const formData = new FormData();
           formData.append('type', type.toString());
           formData.append('file', fileData);
           const res = await uploadFile(formData);
           if (res.code === 200) {
+            if (actionRef.current) {
+              actionRef.current.reload();
+            }
             message.success('提交成功');
           }
           return true;
         }}
       >
-        <ProFormText width="xl" name="name" label="文件名称(不填写时默认使用文件名称)" />
+        {/* <ProFormText width="xl" name="name" label="文件名称(不填写时默认使用文件名称)" /> */}
         <ProForm.Group>
           <ProFormSelect
             allowClear={false}
@@ -104,7 +97,6 @@ const Download: React.FC = () => {
   };
   const deleteItem = (fileKey: string) => {
     deleteFile(fileKey).then((e) => {
-      console.log(e);
       if (e.code === 200) {
         if (actionRef.current) {
           actionRef.current.reload();
@@ -144,7 +136,7 @@ const Download: React.FC = () => {
       valueType: 'option',
       render: (_, record) => {
         return [
-          <a key="download" download={record.name} href={record.url}>
+          <a key="download" download={record.name} href={record.url} target="_blank">
             下载
           </a>,
           <a key="delete" style={{ color: 'red' }} onClick={(): void => deleteItem(record.fileKey)}>
