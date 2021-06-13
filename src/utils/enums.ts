@@ -68,6 +68,12 @@ const enums = {
       label: '安装维护人员',
     },
   },
+  fileType: {
+    '0': {
+      key: 0,
+      label: '说明书',
+    },
+  },
 };
 
 export function translateEnums(gloup: string, key: string | number): string {

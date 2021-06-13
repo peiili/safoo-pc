@@ -7,6 +7,7 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import type { FormInstance } from '@ant-design/pro-form';
 import ProForm, { ModalForm, ProFormSelect, ProFormUploadButton } from '@ant-design/pro-form';
 import { Button, Card, message } from 'antd';
+import { translateEnums } from '@/utils/enums';
 
 const Download: React.FC = () => {
   const actionRef = useRef<ActionType>();
@@ -17,6 +18,7 @@ const Download: React.FC = () => {
     fileKey: string;
     title: string;
     size: number;
+    type: number;
     valueType?: string;
     url: string;
     name: string;
@@ -76,7 +78,7 @@ const Download: React.FC = () => {
             options={[
               {
                 value: 0,
-                label: '说明书',
+                label: translateEnums('fileType', 0),
               },
             ]}
             width="xl"
@@ -125,6 +127,9 @@ const Download: React.FC = () => {
     {
       dataIndex: 'type',
       title: '类型',
+      render: (_, record) => {
+        return [translateEnums('fileType', record.type)];
+      },
     },
     {
       dataIndex: 'uploadTime',
