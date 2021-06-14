@@ -3,7 +3,7 @@ import { ProFormText, ModalForm, ProFormCaptcha } from '@ant-design/pro-form';
 import { Form, message } from 'antd';
 import { getAuthCode, userRegister } from '@/services/api-user';
 
-const Registry: React.FC<{ showRegisterModel: boolean; setRegister: Function }> = (props) => {
+const Registry: React.FC<{ showRegisterModel: boolean; setRegister: () => void }> = (props) => {
   const [form] = Form.useForm();
   const getCode = (phone: string) => {
     return getAuthCode(phone).then((res) => {

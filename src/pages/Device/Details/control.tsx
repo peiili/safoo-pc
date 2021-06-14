@@ -37,10 +37,10 @@ const Control: React.FC<PropsType> = (props) => {
   const [deviceName, setDeviceName] = useState<string>('');
   const [loadStatus, setLoadStatus] = useState<boolean>(true);
 
-  const onChangeDeviceName = function (e: Record<string, any>) {
+  const onChangeDeviceName = (e: Record<string, any>) => {
     setDeviceName(e.target.value);
   };
-  const onChangeModel = function (e: Record<string, any>) {
+  const onChangeModel = (e: Record<string, any>) => {
     if (timer) {
       clearTimeout(timer);
     }
@@ -59,7 +59,7 @@ const Control: React.FC<PropsType> = (props) => {
       });
     }, 2000);
   };
-  const onChangeLight = function (e: boolean) {
+  const onChangeLight = (e: boolean) => {
     if (timer) {
       clearTimeout(timer);
     }

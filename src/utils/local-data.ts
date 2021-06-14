@@ -6,7 +6,7 @@ export const getCacheValue = (name: string): string | null => {
   return null;
 };
 
-export const setCacheValue = (name: string, value: string): void => {
+export const setCacheValue = (name: string, value: string | boolean): void => {
   if (!value && value !== '') {
     localStorage.removeItem(`safoo_${name}`);
   } else {

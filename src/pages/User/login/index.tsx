@@ -23,12 +23,16 @@ const LoginMessage: React.FC<{
 );
 
 /** 此方法会跳转到 redirect 参数所在的位置 */
-const goto = () => {
+const goto = (guest: boolean) => {
   if (!history) return;
   setTimeout(() => {
     const { query } = history.location;
     const { redirect } = query as { redirect: string };
-    history.push(redirect || '/');
+    if (guest) {
+      history.push('/download');
+      return;
+    }
+    history.replace(redirect || '/');
   }, 10);
 };
 
@@ -47,8 +51,16 @@ const Login: React.FC = () => {
       setInitialState({
         ...initialState,
         currentUser: userInfo,
+        isGuest: false,
       });
     }
+  };
+  const setHandleGhost = () => {
+    setInitialState({
+      ...initialState,
+      isGuest: true,
+    });
+    goto(true);
   };
   const registerAccount = () => {
     setRegister(true);
@@ -66,7 +78,7 @@ const Login: React.FC = () => {
         setCacheValue('refreshToken', data.refreshToken);
         message.success('登录成功！');
         await fetchUserInfo();
-        goto();
+        goto(false);
         return;
       }
       // 如果失败去设置用户错误信息
@@ -287,14 +299,14 @@ const Login: React.FC = () => {
               {/* <ProFormCheckbox noStyle name="autoLogin">
                 <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
               </ProFormCheckbox> */}
-              {/* <a
+              <a
                 style={{
                   float: 'right',
                 }}
-                onClick={setHandleUpdate}
+                onClick={setHandleGhost}
               >
-                <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
-              </a> */}
+                <FormattedMessage id="pages.login.guest" defaultMessage="我是游客" />
+              </a>
             </div>
           </ProForm>
           <Registry showRegisterModel={showRegisterModel} setRegister={setRegister} />

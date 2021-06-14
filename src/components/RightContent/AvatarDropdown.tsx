@@ -24,9 +24,9 @@ const loginOut = async () => {
     setCacheValue('expiresIn', false);
     setCacheValue('token', false);
     setCacheValue('refreshToken', false);
+    window.location.reload();
     history.replace({
       pathname: '/user/login',
-
       search: stringify({
         redirect: pathname,
       }),
@@ -36,7 +36,7 @@ const loginOut = async () => {
 
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const { initialState, setInitialState } = useModel('@@initialState');
-  const { currentUser } = initialState;
+  const { currentUser, isGuest } = initialState;
 
   const onMenuClick = useCallback(
     (event: {
@@ -47,7 +47,22 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     }) => {
       const { key } = event;
       if (key === 'logout' && initialState) {
-        setInitialState({ ...initialState, currentUser });
+        setInitialState({
+          ...initialState,
+          currentUser: {
+            avatar: '',
+            createTime: '',
+            departmentCode: '',
+            departmentId: 0,
+            departmentName: '',
+            departmentType: 0,
+            id: '',
+            organizationId: '',
+            roleType: 0,
+            username: '',
+          },
+        });
+
         loginOut();
         return;
       }
@@ -55,7 +70,6 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     },
     [initialState, setInitialState]
   );
-
   const loading = (
     <span className={`${styles.action} ${styles.account}`}>
       <Spin
@@ -68,11 +82,10 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     </span>
   );
 
-  if (!initialState) {
+  if (!initialState && !isGuest) {
     return loading;
   }
-
-  if (!currentUser || !currentUser.nickname) {
+  if (!currentUser || (!currentUser.nickname && !isGuest)) {
     return loading;
   }
 
@@ -88,7 +101,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 
       <Menu.Item key="logout">
         <LogoutOutlined />
-        退出登录
+        {isGuest ? '去登录' : '退出登录'}
       </Menu.Item>
     </Menu>
   );

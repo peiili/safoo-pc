@@ -20,13 +20,13 @@ export const initialStateConfig = {
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser: API.CurrentUser;
+  isGuest: boolean;
   fetchUserInfo: () => Promise<API.CurrentUser>;
 }> {
   const fetchUserInfo = async (): Promise<API.CurrentUser> => {
     try {
       const { data } = await queryCurrentUser();
       const currentUser = data;
-
       return currentUser;
     } catch (error) {
       history.push('/user/login');
@@ -40,16 +40,18 @@ export async function getInitialState(): Promise<{
   };
   // 如果是登录页面，不执行
   const currentUser = await fetchUserInfo();
-  if (history.location.pathname !== '/user/login') {
-    return {
-      fetchUserInfo,
-      currentUser,
-      settings: {},
-    };
-  }
+  // if (history.location.pathname !== '/user/login') {
+  //   return {
+  //     fetchUserInfo,
+  //     currentUser,
+  //     isGuest: false,
+  //     settings: {},
+  //   };
+  // }
   return {
     fetchUserInfo,
     currentUser,
+    isGuest: false,
     settings: {},
   };
 }
@@ -63,7 +65,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     onPageChange: () => {
       const { location } = history;
       // // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== '/user/login') {
+      if (
+        !initialState?.currentUser &&
+        location.pathname !== '/user/login' &&
+        !initialState?.isGuest
+      ) {
         history.push('/user/login');
       }
     },

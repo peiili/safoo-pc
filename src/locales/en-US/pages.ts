@@ -19,6 +19,7 @@ export default {
   'pages.login.rememberMe': 'Remember me',
   'pages.login.forgotPassword': 'Forgot Password ?',
   'pages.login.submit': 'Login',
+  'pages.login.guest': 'Guest',
   'pages.login.loginWith': 'Login with :',
   'pages.login.registerAccount': 'Register Account',
   'pages.welcome.advancedComponent': 'Advanced Component',

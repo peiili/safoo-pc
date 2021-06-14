@@ -4,7 +4,7 @@ import { getDepartmentList } from '@/services/api-department';
 
 const { Option } = Select;
 
-const DepartmentSelect: React.FC<{ id: string; cb: Function }> = (props) => {
+const DepartmentSelect: React.FC<{ id: string; cb: (value: string) => void }> = (props) => {
   const [currentDep, changeDepartment] = useState<string>('');
   const [depList, setDepList] = useState<Record<string, any>[]>([]);
   const handleChangeDepartment = (value: any) => {

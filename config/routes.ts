@@ -98,22 +98,22 @@
     component: './Service/index.tsx',
   },
   {
-    path: '/',
-    redirect: '/account/center',
-  },
-  {
     path: '/account/center',
     icon: 'UserOutlined',
     name: 'account.center',
+    rules: [2, 3, 4, 5, 6, 7, 8, 9],
+    access: 'adminRouteFilter',
     component: './Account/center.tsx',
   },
   {
     path: '/download',
     name: 'download',
     icon: 'CloudDownloadOutlined',
+    rules: [99],
     component: './Download/index.tsx',
   },
   {
+    rules: [99],
     component: './404',
   },
 ];

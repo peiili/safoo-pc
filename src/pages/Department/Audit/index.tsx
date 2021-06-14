@@ -18,7 +18,7 @@ const DepartmentAudit: React.FC = () => {
   const [rejectCause, onSetCause] = useState<string>('');
   const actionRef = useRef<ActionType>();
 
-  const initAuditData = function () {
+  const initAuditData = () => {
     changeStatus(2);
     setDistributionDep('');
     onSetCause('');

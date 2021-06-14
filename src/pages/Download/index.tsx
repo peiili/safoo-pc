@@ -8,8 +8,11 @@ import type { FormInstance } from '@ant-design/pro-form';
 import ProForm, { ModalForm, ProFormSelect, ProFormUploadButton } from '@ant-design/pro-form';
 import { Button, Card, message } from 'antd';
 import { translateEnums } from '@/utils/enums';
+import { useModel } from 'umi';
 
 const Download: React.FC = () => {
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState || {};
   const actionRef = useRef<ActionType>();
   const formRef = useRef<FormInstance>();
   type fileBasic = {
@@ -44,7 +47,7 @@ const Download: React.FC = () => {
         }}
         title="文件上传"
         trigger={
-          <Button type="primary">
+          <Button type="primary" key="primary">
             <PlusOutlined />
             上传文件
           </Button>
@@ -144,9 +147,13 @@ const Download: React.FC = () => {
           <a key="download" download={record.name} href={record.url} target="_blank">
             下载
           </a>,
-          <a key="delete" style={{ color: 'red' }} onClick={(): void => deleteItem(record.fileKey)}>
-            删除
-          </a>,
+          <span key="delete">
+            {currentUser?.roleType === 2 && (
+              <a style={{ color: 'red' }} onClick={(): void => deleteItem(record.fileKey)}>
+                删除
+              </a>
+            )}
+          </span>,
         ];
       },
     },
@@ -173,12 +180,14 @@ const Download: React.FC = () => {
             columns={columns}
             actionRef={actionRef}
             request={fileList}
-            rowKey="name"
+            rowKey="fileKey"
             pagination={{
               showQuickJumper: false,
             }}
             search={false}
-            toolBarRender={() => [handleModalVisible()]}
+            toolBarRender={() => [
+              <div key="create">{currentUser?.roleType === 2 ? handleModalVisible() : ''}</div>,
+            ]}
           />
         </Card>
       </PageContainer>

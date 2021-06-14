@@ -186,7 +186,6 @@ const Install: React.FC = () => {
         visible={createModalVisible}
         onVisibleChange={handleModalVisible}
         onFinish={async (value) => {
-          console.log(value);
           const success = await handleAdd(value);
           if (success) {
             handleModalVisible(false);
