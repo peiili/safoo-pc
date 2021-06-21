@@ -55,7 +55,7 @@
     name: 'device.list',
     path: '/devices/list',
     icon: 'table',
-    rules: [4, 6],
+    rules: [4, 5, 6],
     access: 'adminRouteFilter',
     component: './Device/List/index.tsx',
   },
